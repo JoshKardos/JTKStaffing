@@ -16,12 +16,11 @@
     "test": "cross-env CI=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint src",
-    "jest": "react-scripts test a",
+    "jest": "npm test",
     "jest f": "eact-scripts test f"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint && npm test",
       "pre-push": "npm run lint && npm test"
     }
   },
