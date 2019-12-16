@@ -23,6 +23,10 @@ module.exports = {
   ],
   rules: {
     "no-console": "off",
+    "comma-dangle": "off",
+    "no-param-reassign": "off",
+    "arrow-parens": "off",
+    "no-use-before-define": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
   },
 };
