@@ -11,7 +11,7 @@
     "react-scripts": "3.3.0"
   },
   "scripts": {
-    "prepush": "npm run lint && npm test a",
+    "prepush": "npm run lint && npm test",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
