@@ -11,14 +11,19 @@
     "react-scripts": "3.3.0"
   },
   "scripts": {
-    "prepush": "npm run lint && npm test",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "cross-env CI=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint src",
     "jest": "react-scripts test a",
     "jest f": "eact-scripts test f"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint && npm test",
+      "pre-push": "npm run lint && npm test"
+    }
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -39,6 +44,7 @@
     "babel-jest": "^24.9.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
+    "cross-env": "^6.0.3",
     "eslint": "^6.7.2",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-import": "^2.19.1",
