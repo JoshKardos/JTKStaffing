@@ -1,0 +1,11 @@
+.Button {
+  cursor: pointer;
+  background-color: darkgray;
+  height: 100%;
+  margin-right: 6px;  
+  margin-left: 6px;
+
+}
+.Label {
+  font-size: 22px;
+}

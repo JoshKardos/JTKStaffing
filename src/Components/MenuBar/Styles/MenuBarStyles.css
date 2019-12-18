@@ -1,0 +1,22 @@
+.Bar {
+  width: 100%;
+  background-color: white;
+  display: inline-block;
+}
+.Logo {
+  margin-left: 6px;
+  width: 66px;
+  height: 60px;
+}
+.Left {
+  float: left;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+}
+.Right {
+  float: right;
+  display: flex;
+  flex-direction: row;
+}
