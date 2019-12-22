@@ -22,6 +22,9 @@ module.exports = {
     'react',
   ],
   rules: {
+    "no-shadow": "off",
+    "react/jsx-wrap-multilines": "off",
+    "operator-linebreak": "off",
     "jsx-a11y/click-events-have-key-events": "off",
     "jsx-a11y/interactive-supports-focus": "off",
     "no-console": "off",

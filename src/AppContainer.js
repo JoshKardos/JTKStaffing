@@ -1,11 +1,11 @@
 import React from 'react';
 import './AppContainer.css';
-import MenuBar from './Components/MenuBar/MenuBar'
+import MainScreen from './Containers/MainScreen'
 
 function AppContainer() {
   return (
     <div className="App">
-      <MenuBar />
+      <MainScreen />
     </div>
   );
 }
