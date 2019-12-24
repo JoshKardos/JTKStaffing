@@ -21,7 +21,11 @@ module.exports = {
   plugins: [
     'react',
   ],
+  parser: 'babel-eslint',
   rules: {
+    "object-curly-newline": "off",
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
+    "jsx-a11y/label-has-associated-control": "off",
     "no-shadow": "off",
     "react/jsx-wrap-multilines": "off",
     "operator-linebreak": "off",
