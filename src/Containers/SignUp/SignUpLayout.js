@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types';
 import '../LogIn/LogInLayoutStyles.css'
 // import firebase from '../../Firebase/index'
+import Loader from 'react-loader-spinner';
 
 class SignUpLayout extends Component {
   constructor() {
@@ -10,13 +12,8 @@ class SignUpLayout extends Component {
       email: '',
       password: '',
       passwordConfirm: '',
-      error: '',
       company: ''
     }
-  }
-
-  dismissError = () => {
-    this.setState({ error: '' })
   }
 
   validateEmail = (inputText) => {
@@ -30,37 +27,58 @@ class SignUpLayout extends Component {
 
   handleSubmit = (evt) => {
     const { name, email, password, company, passwordConfirm } = this.state
+    const { signUp, setSignUpError } = this.props
     evt.preventDefault()
 
     if (!name.replace(/\s+/g, '')) {
-      return this.setState({ error: 'Name is required' })
+      const action = {
+        payload: 'Name is required'
+      }
+      return setSignUpError(action)
     }
 
     if (!email.replace(/\s+/g, '')) {
-      return this.setState({ error: 'Email is required' })
+      const action = {
+        payload: 'Email is required'
+      }
+      return setSignUpError(action)
     }
 
     if (!company.replace(/\s+/g, '')) {
-      return this.setState({ error: 'Company is required' })
+      const action = {
+        payload: 'Company is required'
+      }
+      return setSignUpError(action)
     }
 
     if (!password.replace(/\s+/g, '')) {
-      return this.setState({ error: 'Password is required' })
+      const action = {
+        payload: 'Password is required'
+      }
+      return setSignUpError(action)
     }
 
     if (!passwordConfirm.replace(/\s+/g, '')) {
-      return this.setState({ error: 'Confirm password' })
+      const action = {
+        payload: 'Confirm password'
+      }
+      return setSignUpError(action)
     }
 
     if (password !== passwordConfirm) {
-      return this.setState({ error: 'Passwords do not match' })
+      const action = {
+        payload: 'Passwords do not match'
+      }
+      return setSignUpError(action)
     }
 
     if (!this.validateEmail(email)) {
-      return this.setState({ error: 'Invalid email' })
+      const action = {
+        payload: 'Invalid email'
+      }
+      return setSignUpError(action)
     }
-
-    return this.setState({ error: '' })
+    return signUp(name, email, password, company)
   }
 
   handleNameChange = (evt) => {
@@ -96,19 +114,12 @@ class SignUpLayout extends Component {
   render() {
     // NOTE: I use data-attributes for easier E2E testing
     // but you don't need to target those (any css-selector will work)
-    const { error, email, password, passwordConfirm, company, name } = this.state
-    const cName = error ? 'SignupError' : 'Login'
+    const { email, password, passwordConfirm, company, name } = this.state
+    const { isLoading } = this.props
     return (
       <div className="Container">
-        <div className={cName}>
+        <div className="Login">
           <form onSubmit={this.handleSubmit}>
-            {
-              error &&
-              <h3 className="Error" data-test="error" onClick={this.dismissError}>
-                <button className="XButton" type="button" onClick={this.dismissError}>✖</button>
-                {error}
-              </h3>
-            }
             <div className="NameContainer">
               <label className="NameLabel">Name:</label>
               <input className="NameInput" type="text" data-test="email" value={name} onChange={this.handleNameChange} />
@@ -129,12 +140,21 @@ class SignUpLayout extends Component {
               <label className="PasswordLabel2">Password:</label>
               <input className="PasswordInput2" type="password" data-test="password" value={passwordConfirm} onChange={this.handlePassConfirmChange} />
             </div>
-            <input className="SubmitButton" type="submit" value="Sign Up" data-test="submit" />
+            <button className="SubmitButton" type="submit">
+              { !isLoading && <p>Sign Up</p> }
+              { isLoading && <Loader type="ThreeDots" color="#00BFFF" height={40} width={80} /> }
+            </button>
           </form>
         </div>
       </div>
     )
   }
+}
+
+SignUpLayout.propTypes = {
+  signUp: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  setSignUpError: PropTypes.func.isRequired
 }
 
 export default SignUpLayout

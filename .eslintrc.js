@@ -23,6 +23,8 @@ module.exports = {
   ],
   parser: 'babel-eslint',
   rules: {
+    "max-len": "off",
+    "react/jsx-props-no-spreading": "off",
     "object-curly-newline": "off",
     "jsx-a11y/no-noninteractive-element-interactions": "off",
     "jsx-a11y/label-has-associated-control": "off",

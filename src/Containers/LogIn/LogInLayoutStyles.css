@@ -86,6 +86,8 @@
 .SubmitButton {
   margin-top: 24px;
   width: 100px;
+  border-radius: 4px;
+  font-size: 12px;
 }
 .Error {
   display: flex;
