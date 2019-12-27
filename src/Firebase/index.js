@@ -11,5 +11,7 @@ const config = {
   measurementId: 'G-EKXVRKRKD3'
 }
 firebase.initializeApp(config)
-
+firebase.auth().setPersistence(process.env.NODE_ENV === 'test'
+  ? firebase.auth.Auth.Persistence.NONE
+  : firebase.auth.Auth.Persistence.LOCAL);
 export default firebase

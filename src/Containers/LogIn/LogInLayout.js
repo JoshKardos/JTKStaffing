@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import './LogInLayoutStyles.css'
-// import firebase from '../../Firebase/index'
 
 class LoginPage extends Component {
   constructor() {
