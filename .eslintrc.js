@@ -21,7 +21,14 @@ module.exports = {
   plugins: [
     'react',
   ],
+  parser: 'babel-eslint',
   rules: {
+    "react/forbid-prop-types": "off",
+    "max-len": "off",
+    "react/jsx-props-no-spreading": "off",
+    "object-curly-newline": "off",
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
+    "jsx-a11y/label-has-associated-control": "off",
     "no-shadow": "off",
     "react/jsx-wrap-multilines": "off",
     "operator-linebreak": "off",

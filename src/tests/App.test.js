@@ -10,6 +10,16 @@ const mockState = {
     layoutReducer: {
       currentLayout: 'HOME'
     }
+  },
+  UserReducers: {
+    userReducer: {
+      signUpLoading: false
+    }
+  },
+  ErrorReducers: {
+    errorReducer: {
+      errorDescription: ''
+    }
   }
 }
 
