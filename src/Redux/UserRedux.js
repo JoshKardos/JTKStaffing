@@ -3,6 +3,7 @@ import { createReducer } from 'redux-create-reducer';
 
 export const TYPES = {
   SIGN_UP: 'SIGN_UP',
+  LOGIN: 'LOGIN',
   LOG_OUT: 'LOG_OUT',
   FETCH_USER_DATA: 'FETCH_USER_DATA',
   SET_USER_DATA: 'SET_USER_DATA',
@@ -16,11 +17,16 @@ const initialState = {
   name: '',
   company: '',
   email: '',
-  signUpLoading: false
+  signUpLoading: false,
+  loginLoading: false
 }
 
 export const logOut = () => (
   { type: TYPES.LOG_OUT, id: '', name: '', company: '', email: '', signUpLoading: false }
+)
+
+export const login = (state = initialState) => (
+  { type: TYPES.LOGIN, ...state }
 )
 
 export const setSignUpError = (state = initialState) => (
@@ -43,14 +49,15 @@ export const setUserData = (state = initialState, action) => (
   { type: TYPES.SET_USER_DATA, ...state, ...action.payload }
 )
 
-export const signUp = (name, email, password, company) => (
-  { type: TYPES.SIGN_UP, payload: { name, email, password, company } }
+export const signUp = (state = initialState) => (
+  { type: TYPES.SIGN_UP, ...state }
 )
 
 export const userLoggedIn = (state) => !(!state.id || !state.name || !state.company || !state.email)
 
 const userReducer = createReducer(initialState, {
   LOG_OUT: logOut,
+  LOGIN: login,
   FETCH_USER_DATA: fetchUserData,
   SET_USER_DATA: setUserData,
   SIGN_UP: signUp,

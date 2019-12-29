@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import './LogInLayoutStyles.css'
+import './LoginLayoutStyles.css'
+import PropTypes from 'prop-types'
 
 class LoginPage extends Component {
   constructor() {
@@ -17,17 +18,20 @@ class LoginPage extends Component {
 
   handleSubmit = (evt) => {
     const { email, password } = this.state
+    const { login } = this.props
     evt.preventDefault()
 
     if (!email) {
       return this.setState({ error: 'Email is required' })
     }
-
     if (!password) {
       return this.setState({ error: 'Password is required' })
     }
-
-    return this.setState({ error: '' })
+    const action = {
+      email,
+      password
+    }
+    return login(action)
   }
 
   handleEmailChange = (evt) => {
@@ -71,6 +75,12 @@ class LoginPage extends Component {
       </div>
     )
   }
+}
+
+LoginPage.propTypes = {
+  login: PropTypes.func.isRequired
+  // isLoading: PropTypes.bool.isRequired,
+  // setSignUpError: PropTypes.func.isRequired
 }
 
 export default LoginPage
