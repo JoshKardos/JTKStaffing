@@ -22,7 +22,6 @@ class MainScreen extends Component {
         fetchUserData(action)
       } else {
         // No user is signed in.
-        console.log('NOT SIGNED IN')
       }
     })
   }
