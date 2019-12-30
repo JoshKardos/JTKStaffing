@@ -4,9 +4,9 @@ import { connect } from 'react-redux'
 import firebase from '../Firebase/index'
 import { LAYOUTS } from '../Redux/LayoutRedux'
 import MenuBar from '../Components/MenuBar/MenuBar'
-import LogInLayout from './LogIn/LogInLayout'
+import LoginLayout from './Login/LoginLayout'
 import SignUpLayout from './SignUp/SignUpLayout'
-import { signUp, setSignUpError, fetchUserData } from '../Redux/UserRedux'
+import { signUp, setSignUpError, fetchUserData, login } from '../Redux/UserRedux'
 import { resetError } from '../Redux/ErrorRedux'
 import GenericErrorModal from './GenericErrorModal'
 
@@ -22,19 +22,18 @@ class MainScreen extends Component {
         fetchUserData(action)
       } else {
         // No user is signed in.
-        console.log('NOT SIGNED IN')
       }
     })
   }
 
   render() {
-    const { currentLayout, signUp, errorDescription, resetError, signUpLoading, setSignUpError } = this.props
+    const { currentLayout, signUp, errorDescription, resetError, signUpLoading, setSignUpError, login, loginLoading } = this.props
     return (
       <div>
         <MenuBar />
         { errorDescription ?
           <GenericErrorModal errorDescription={errorDescription} resetError={resetError} /> : null}
-        { currentLayout === LAYOUTS.LOGIN && <LogInLayout /> }
+        { currentLayout === LAYOUTS.LOGIN && <LoginLayout login={login} isLoading={loginLoading} /> }
         { currentLayout === LAYOUTS.SIGNUP && <SignUpLayout signUp={signUp} isLoading={signUpLoading} setSignUpError={setSignUpError} /> }
       </div>
     )
@@ -48,16 +47,20 @@ MainScreen.propTypes = {
   resetError: PropTypes.func.isRequired,
   signUpLoading: PropTypes.bool.isRequired,
   setSignUpError: PropTypes.func.isRequired,
-  fetchUserData: PropTypes.func.isRequired
+  fetchUserData: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
+  loginLoading: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = state => ({
   currentLayout: state.LayoutReducers.layoutReducer.currentLayout,
+  loginLoading: state.UserReducers.userReducer.loginLoading,
   signUpLoading: state.UserReducers.userReducer.signUpLoading,
   errorDescription: state.ErrorReducers.errorReducer.errorDescription
 })
 
 const mapDispatchToProps = dispatch => ({
+  login: (email, password) => dispatch(login(email, password)),
   signUp: (name, email, password, company) => dispatch(signUp(name, email, password, company)),
   setSignUpError: (error) => dispatch(setSignUpError(error)),
   resetError: () => dispatch(resetError()),

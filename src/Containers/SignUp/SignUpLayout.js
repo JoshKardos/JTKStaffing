@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types';
-import '../LogIn/LogInLayoutStyles.css'
-// import firebase from '../../Firebase/index'
-import Loader from 'react-loader-spinner';
+import PropTypes from 'prop-types'
+import '../Login/LoginLayoutStyles.css'
+import Loader from 'react-loader-spinner'
 
 class SignUpLayout extends Component {
   constructor() {
@@ -78,7 +77,13 @@ class SignUpLayout extends Component {
       }
       return setSignUpError(action)
     }
-    return signUp(name, email, password, company)
+    const action = {
+      name,
+      email,
+      password,
+      company
+    }
+    return signUp(action)
   }
 
   handleNameChange = (evt) => {

@@ -6,7 +6,7 @@ import { TYPES as LayoutTypes } from '../Redux/LayoutRedux'
 export const resetErrorOnMenuBarSelectEpic = (action$, state$) => action$.pipe(
   ofType(
     LayoutTypes.SET_HOME_LAYOUT,
-    LayoutTypes.SET_LOG_IN_LAYOUT,
+    LayoutTypes.SET_LOGIN_LAYOUT,
     LayoutTypes.SET_SIGN_UP_LAYOUT
   ),
   filter(() => state$.value.ErrorReducers.errorReducer.errorDescription),
