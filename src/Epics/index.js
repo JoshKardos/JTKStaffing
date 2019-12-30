@@ -2,13 +2,15 @@ import { combineEpics } from 'redux-observable'
 
 import {
   signUpEpic,
+  startLoginLoadingEpic,
+  stopLoginLoadingEpic,
   startSignUpLoadingEpic,
   stopSignUpLoadingEpic,
   setSignUpErrorEpic,
   logOutEpic,
   fetchUserDataEpic,
   loginEpic,
-  homePageAfterLoginEpic
+  homePageAfterLoginOrSignUpEpic
 } from './UserEpics'
 
 import {
@@ -20,13 +22,15 @@ export const rootEpic = combineEpics(
 
   // User Epics
   loginEpic,
+  startLoginLoadingEpic,
+  stopLoginLoadingEpic,
   fetchUserDataEpic,
   logOutEpic,
   setSignUpErrorEpic,
   signUpEpic,
   startSignUpLoadingEpic,
   stopSignUpLoadingEpic,
-  homePageAfterLoginEpic,
+  homePageAfterLoginOrSignUpEpic,
 
   // Error Epics
   resetErrorOnMenuBarSelectEpic

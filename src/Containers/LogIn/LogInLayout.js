@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import './LoginLayoutStyles.css'
 import PropTypes from 'prop-types'
+import Loader from 'react-loader-spinner'
 
 class LoginPage extends Component {
   constructor() {
@@ -50,6 +51,7 @@ class LoginPage extends Component {
     // NOTE: I use data-attributes for easier E2E testing
     // but you don't need to target those (any css-selector will work)
     const { error, email, password } = this.state
+    const { isLoading } = this.props
     return (
       <div className="Container">
         <div className="Login">
@@ -69,7 +71,10 @@ class LoginPage extends Component {
               <label className="PasswordLabel">Password:</label>
               <input className="PasswordInput" type="password" data-test="password" value={password} onChange={this.handlePassChange} />
             </div>
-            <input className="SubmitButton" type="submit" value="Log In" data-test="submit" />
+            <button className="SubmitButton" type="submit">
+              { !isLoading && <p>Sign Up</p> }
+              { isLoading && <Loader type="ThreeDots" color="#00BFFF" height={40} width={80} /> }
+            </button>
           </form>
         </div>
       </div>
@@ -78,8 +83,8 @@ class LoginPage extends Component {
 }
 
 LoginPage.propTypes = {
-  login: PropTypes.func.isRequired
-  // isLoading: PropTypes.bool.isRequired,
+  login: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired
   // setSignUpError: PropTypes.func.isRequired
 }
 

@@ -5,8 +5,6 @@ import { TYPES as ErrorTypes } from '../Redux/ErrorRedux'
 import { TYPES as LayoutTypes, LAYOUTS } from '../Redux/LayoutRedux'
 import firebase from '../Firebase/index'
 
-// action contains email and password so this should work for sign up as well , follow the same step 12/27
-
 export const loginEpic = (action$) => action$.pipe(
   ofType(UserTypes.LOGIN),
   switchMap(action => {
@@ -61,11 +59,10 @@ export const stopSignUpLoadingEpic = (action$, state$) => action$.pipe(
   mapTo({ type: UserTypes.STOP_SIGN_UP_LOADING })
 )
 
-// export const startLoginLoadingEpic = (action$, state$) => action$.pipe(
-//   ofType(UserTypes.LOGIN),
-//   mapTo({ })
-
-// )
+export const startLoginLoadingEpic = (action$) => action$.pipe(
+  ofType(UserTypes.LOGIN),
+  mapTo({ type: UserTypes.START_LOGIN_LOADING })
+)
 
 export const stopLoginLoadingEpic = (action$, state$) => action$.pipe(
   ofType(ErrorTypes.SET_ERROR, UserTypes.SET_USER_DATA),
@@ -88,9 +85,9 @@ export const fetchUserDataEpic = (action$, state$) => action$.pipe(
   })
 )
 
-export const homePageAfterLoginEpic = (action$, state$) => action$.pipe(
+export const homePageAfterLoginOrSignUpEpic = (action$, state$) => action$.pipe(
   ofType(UserTypes.SET_USER_DATA),
-  filter(() => state$.value.LayoutReducers.layoutReducer.currentLayout === LAYOUTS.LOGIN),
+  filter(() => state$.value.LayoutReducers.layoutReducer.currentLayout === LAYOUTS.LOGIN || state$.value.LayoutReducers.layoutReducer.currentLayout === LAYOUTS.SIGNUP),
   mapTo({ type: LayoutTypes.SET_HOME_LAYOUT })
 )
 

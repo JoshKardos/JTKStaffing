@@ -27,13 +27,13 @@ class MainScreen extends Component {
   }
 
   render() {
-    const { currentLayout, signUp, errorDescription, resetError, signUpLoading, setSignUpError, login } = this.props
+    const { currentLayout, signUp, errorDescription, resetError, signUpLoading, setSignUpError, login, loginLoading } = this.props
     return (
       <div>
         <MenuBar />
         { errorDescription ?
           <GenericErrorModal errorDescription={errorDescription} resetError={resetError} /> : null}
-        { currentLayout === LAYOUTS.LOGIN && <LoginLayout login={login} /> }
+        { currentLayout === LAYOUTS.LOGIN && <LoginLayout login={login} isLoading={loginLoading} /> }
         { currentLayout === LAYOUTS.SIGNUP && <SignUpLayout signUp={signUp} isLoading={signUpLoading} setSignUpError={setSignUpError} /> }
       </div>
     )
@@ -48,11 +48,13 @@ MainScreen.propTypes = {
   signUpLoading: PropTypes.bool.isRequired,
   setSignUpError: PropTypes.func.isRequired,
   fetchUserData: PropTypes.func.isRequired,
-  login: PropTypes.func.isRequired
+  login: PropTypes.func.isRequired,
+  loginLoading: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = state => ({
   currentLayout: state.LayoutReducers.layoutReducer.currentLayout,
+  loginLoading: state.UserReducers.userReducer.loginLoading,
   signUpLoading: state.UserReducers.userReducer.signUpLoading,
   errorDescription: state.ErrorReducers.errorReducer.errorDescription
 })
