@@ -8,25 +8,26 @@ class LoginPage extends Component {
     super()
     this.state = {
       email: '',
-      password: '',
-      error: '',
+      password: ''
     }
-  }
-
-  dismissError = () => {
-    this.setState({ error: '' })
   }
 
   handleSubmit = (evt) => {
     const { email, password } = this.state
-    const { login } = this.props
+    const { login, setLoginError } = this.props
     evt.preventDefault()
 
     if (!email) {
-      return this.setState({ error: 'Email is required' })
+      const action = {
+        payload: 'Email is required'
+      }
+      return setLoginError(action)
     }
     if (!password) {
-      return this.setState({ error: 'Password is required' })
+      const action = {
+        payload: 'Password is required'
+      }
+      return setLoginError(action)
     }
     const action = {
       email,
@@ -50,19 +51,12 @@ class LoginPage extends Component {
   render() {
     // NOTE: I use data-attributes for easier E2E testing
     // but you don't need to target those (any css-selector will work)
-    const { error, email, password } = this.state
+    const { email, password } = this.state
     const { isLoading } = this.props
     return (
       <div className="Container">
         <div className="Login">
           <form onSubmit={this.handleSubmit}>
-            {
-              error &&
-              <h3 className="Error" data-test="error" onClick={this.dismissError}>
-                <button className="XButton" type="button" onClick={this.dismissError}>✖</button>
-                {error}
-              </h3>
-            }
             <div className="EmailContainer">
               <label className="EmailLabel">Email:</label>
               <input className="EmailInput" type="text" data-test="email" value={email} onChange={this.handleEmailChange} />
@@ -84,8 +78,8 @@ class LoginPage extends Component {
 
 LoginPage.propTypes = {
   login: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired
-  // setSignUpError: PropTypes.func.isRequired
+  isLoading: PropTypes.bool.isRequired,
+  setLoginError: PropTypes.func.isRequired
 }
 
 export default LoginPage

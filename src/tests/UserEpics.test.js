@@ -32,7 +32,7 @@ describe('loginEpic', () => {
   it('dispatches SET_ERROR after successfully logged in', (done) => {
     const action$ = ActionsObservable.of(
       { type: UserTypes.LOGIN, email: 'joshkardos@gmail.com', password: 'p' }
-    )// Password should be at least 6 characters
+    )
     const expectedOutputAction = { type: ErrorTypes.SET_ERROR, payload: 'The password is invalid or the user does not have a password.' }
     loginEpic(action$)
       .subscribe(actualOutputAction => {
