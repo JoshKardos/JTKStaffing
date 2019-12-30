@@ -21,6 +21,7 @@
 .Description {
   color: black;
   margin-top: 26px;
+  margin-bottom: 12px;
 }
 .OkayButton {
   background-color: blue;
@@ -31,5 +32,4 @@
   align-self: center;
   font-weight: bold;
   font-size: 16px;
-  margin-top: 12px;
 }

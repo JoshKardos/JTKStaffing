@@ -6,7 +6,7 @@ import { LAYOUTS } from '../Redux/LayoutRedux'
 import MenuBar from '../Components/MenuBar/MenuBar'
 import LoginLayout from './LogIn/LoginLayout'
 import SignUpLayout from './SignUp/SignUpLayout'
-import { signUp, setSignUpError, fetchUserData, login } from '../Redux/UserRedux'
+import { signUp, setSignUpError, fetchUserData, login, setLoginError } from '../Redux/UserRedux'
 import { resetError } from '../Redux/ErrorRedux'
 import GenericErrorModal from './GenericErrorModal'
 
@@ -27,13 +27,13 @@ class MainScreen extends Component {
   }
 
   render() {
-    const { currentLayout, signUp, errorDescription, resetError, signUpLoading, setSignUpError, login, loginLoading } = this.props
+    const { currentLayout, signUp, errorDescription, resetError, signUpLoading, setSignUpError, login, loginLoading, setLoginError } = this.props
     return (
       <div>
         <MenuBar />
         { errorDescription ?
           <GenericErrorModal errorDescription={errorDescription} resetError={resetError} /> : null}
-        { currentLayout === LAYOUTS.LOGIN && <LoginLayout login={login} isLoading={loginLoading} /> }
+        { currentLayout === LAYOUTS.LOGIN && <LoginLayout login={login} isLoading={loginLoading} setLoginError={setLoginError} /> }
         { currentLayout === LAYOUTS.SIGNUP && <SignUpLayout signUp={signUp} isLoading={signUpLoading} setSignUpError={setSignUpError} /> }
       </div>
     )
@@ -47,6 +47,7 @@ MainScreen.propTypes = {
   resetError: PropTypes.func.isRequired,
   signUpLoading: PropTypes.bool.isRequired,
   setSignUpError: PropTypes.func.isRequired,
+  setLoginError: PropTypes.func.isRequired,
   fetchUserData: PropTypes.func.isRequired,
   login: PropTypes.func.isRequired,
   loginLoading: PropTypes.bool.isRequired
@@ -63,6 +64,7 @@ const mapDispatchToProps = dispatch => ({
   login: (email, password) => dispatch(login(email, password)),
   signUp: (name, email, password, company) => dispatch(signUp(name, email, password, company)),
   setSignUpError: (error) => dispatch(setSignUpError(error)),
+  setLoginError: (error) => dispatch(setLoginError(error)),
   resetError: () => dispatch(resetError()),
   fetchUserData: (userId) => dispatch(fetchUserData(userId))
 })
