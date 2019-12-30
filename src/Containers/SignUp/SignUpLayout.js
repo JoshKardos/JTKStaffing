@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import '../Login/LoginLayoutStyles.css'
+import '../LogIn/LoginLayoutStyles.css'
 import Loader from 'react-loader-spinner'
 
 class SignUpLayout extends Component {
