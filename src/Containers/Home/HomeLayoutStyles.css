@@ -1,0 +1,32 @@
+.HomeContainer {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+.InnerHomeContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 4px;
+  height: 500px;
+  width: 100%;
+  margin-top: 22px;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+.WhatWeOffer {
+  font-size: 24px;
+  font-weight: bold; 
+}
+.SignUpText {
+  font-size: 24px;
+  font-weight: bold;
+  margin-left: 20px;
+}
+li {
+  font-weight: bold;
+  font-size: 20px;
+  margin-left: 140px;
+  margin-bottom: 6px;
+}
+

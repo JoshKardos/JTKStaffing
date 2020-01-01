@@ -1,0 +1,9 @@
+.ContactText {
+  color: white;
+  text-align: center;
+}
+.ContactTextContainer {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+}
