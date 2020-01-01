@@ -17,6 +17,10 @@ import {
   resetErrorOnMenuBarSelectEpic
 } from './ErrorEpics'
 
+import {
+  setTimesheetFileError
+} from './DashboardEpics'
+
 // eslint-disable-next-line import/prefer-default-export
 export const rootEpic = combineEpics(
 
@@ -33,5 +37,8 @@ export const rootEpic = combineEpics(
   homePageAfterLoginOrSignUpEpic,
 
   // Error Epics
-  resetErrorOnMenuBarSelectEpic
+  resetErrorOnMenuBarSelectEpic,
+
+  // Dashboard Epics
+  setTimesheetFileError
 );

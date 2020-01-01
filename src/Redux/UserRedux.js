@@ -21,11 +21,12 @@ const initialState = {
   company: '',
   email: '',
   signUpLoading: false,
-  loginLoading: false
+  loginLoading: false,
+  admin: false
 }
 
 export const logOut = () => (
-  { type: TYPES.LOG_OUT, id: '', name: '', company: '', email: '', signUpLoading: false }
+  { type: TYPES.LOG_OUT, id: '', name: '', company: '', email: '', signUpLoading: false, loginLoading: false, admin: false }
 )
 
 export const login = (state = initialState) => (
@@ -69,6 +70,8 @@ export const signUp = (state = initialState) => (
 )
 
 export const userLoggedIn = (state) => !(!state.id || !state.name || !state.company || !state.email)
+
+export const adminLoggedIn = (state) => userLoggedIn && state.admin === true
 
 const userReducer = createReducer(initialState, {
   LOG_OUT: logOut,

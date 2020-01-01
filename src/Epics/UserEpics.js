@@ -80,7 +80,8 @@ export const fetchUserDataEpic = (action$, state$) => action$.pipe(
       const email = (snapshot.val() && snapshot.val().email) || 'N/A'
       const company = (snapshot.val() && snapshot.val().company) || 'N/A'
       const id = (snapshot.val() && snapshot.val().uid) || 'N/A'
-      return { type: UserTypes.SET_USER_DATA, payload: { id, name, email, company } }
+      const admin = (snapshot.val() && snapshot.val().admin) || null
+      return { type: UserTypes.SET_USER_DATA, payload: { id, name, email, company, admin } }
     })
   })
 )

@@ -14,7 +14,7 @@ export const setError = (state = initialState, action) => (
   { type: TYPES.SET_ERROR, ...state, errorDescription: action.payload }
 )
 export const resetError = (state = initialState) => (
-  { type: TYPES.SET_ERROR, ...state, errorDescription: '' }
+  { type: TYPES.RESET_ERROR, ...state, errorDescription: '' }
 )
 
 const errorReducer = createReducer(initialState, {
