@@ -6,9 +6,11 @@ import { LAYOUTS } from '../Redux/LayoutRedux'
 import MenuBar from '../Components/MenuBar/MenuBar'
 import LoginLayout from './LogIn/LoginLayout'
 import SignUpLayout from './SignUp/SignUpLayout'
+import HomeLayout from './Home/HomeLayout'
 import { signUp, setSignUpError, fetchUserData, login, setLoginError } from '../Redux/UserRedux'
 import { resetError } from '../Redux/ErrorRedux'
 import GenericErrorModal from './GenericErrorModal'
+import './MainScreenStyles.css'
 
 class MainScreen extends Component {
   componentDidMount() {
@@ -33,8 +35,12 @@ class MainScreen extends Component {
         <MenuBar />
         { errorDescription ?
           <GenericErrorModal errorDescription={errorDescription} resetError={resetError} /> : null}
+        { currentLayout === LAYOUTS.HOME && <HomeLayout /> }
         { currentLayout === LAYOUTS.LOGIN && <LoginLayout login={login} isLoading={loginLoading} setLoginError={setLoginError} /> }
         { currentLayout === LAYOUTS.SIGNUP && <SignUpLayout signUp={signUp} isLoading={signUpLoading} setSignUpError={setSignUpError} /> }
+        <div className="ContactTextContainer">
+          <p className="ContactText">Contact us at joshkardos@gmail.com</p>
+        </div>
       </div>
     )
   }
