@@ -8,25 +8,43 @@ import { setHomeLayout, setLoginLayout, setSignUpLayout } from '../../Redux/Layo
 import { logOut, userLoggedIn } from '../../Redux/UserRedux'
 
 class MenuBar extends Component {
-  render() {
-    const { setHome, setLogin, setSignUp, logOut, userState } = this.props
+  renderLoggedIn() {
+    const { setHome, logOut } = this.props
+    return (
+      <div className="Bar">
+        <div className="Left">
+          <img src={logo} className="Logo" alt="logo" />
+          <MenuBarItem label="Dashboard" onClick={setHome} />
+        </div>
+        <div className="Right">
+          <MenuBarItem label="Log Out" onClick={logOut} />
+        </div>
+      </div>
+    )
+  }
+
+  renderLoggedOut() {
+    const { setHome, setLogin, setSignUp } = this.props
     return (
       <div className="Bar">
         <div className="Left">
           <img src={logo} className="Logo" alt="logo" />
           <MenuBarItem label="Home" onClick={setHome} />
         </div>
-        { !userLoggedIn(userState) &&
-          <div className="Right">
-            <MenuBarItem label="Login" onClick={setLogin} />
-            <MenuBarItem label="Sign Up" onClick={setSignUp} />
-          </div>}
-        { userLoggedIn(userState) &&
-          <div className="Right">
-            <MenuBarItem label="Log Out" onClick={logOut} />
-          </div>}
+        <div className="Right">
+          <MenuBarItem label="Login" onClick={setLogin} />
+          <MenuBarItem label="Sign Up" onClick={setSignUp} />
+        </div>
       </div>
-    );
+    )
+  }
+
+  render() {
+    const { userState } = this.props
+    if (userLoggedIn(userState)) {
+      return this.renderLoggedIn()
+    }
+    return this.renderLoggedOut()
   }
 }
 

@@ -66,7 +66,7 @@ class LoginPage extends Component {
               <input className="PasswordInput" type="password" data-test="password" value={password} onChange={this.handlePassChange} />
             </div>
             <button className="SubmitButton" type="submit">
-              { !isLoading && <p>Sign Up</p> }
+              { !isLoading && <p>Login</p> }
               { isLoading && <Loader type="ThreeDots" color="#00BFFF" height={40} width={80} /> }
             </button>
           </form>

@@ -24,6 +24,7 @@ module.exports = {
   ],
   parser: 'babel-eslint',
   rules: {
+    "react/jsx-one-expression-per-line": "off",
     "react/forbid-prop-types": "off",
     "max-len": "off",
     "react/jsx-props-no-spreading": "off",
