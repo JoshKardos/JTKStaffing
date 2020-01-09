@@ -20,6 +20,11 @@ const mockState = {
     errorReducer: {
       errorDescription: ''
     }
+  },
+  DashboardReducers: {
+    dashboardReducer: {
+      uploading: false
+    }
   }
 }
 
