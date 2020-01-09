@@ -1,5 +1,5 @@
 import { ofType } from 'redux-observable'
-import { map, switchMap, mapTo } from 'rxjs/operators';
+import { map, mapTo } from 'rxjs/operators';
 import { TYPES as DashboardTypes } from '../Redux/DashboardRedux'
 import { TYPES as ErrorTypes } from '../Redux/ErrorRedux'
 import firebase from '../Firebase/index'

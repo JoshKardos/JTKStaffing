@@ -18,7 +18,7 @@ const initialState = {
 }
 
 export const saveToDatabase = (state = initialState) => (
-  { type: TYPES.SAVE_TO_DATABASE, ...state}
+  { type: TYPES.SAVE_TO_DATABASE, ...state }
 )
 
 export const timesheetUploadError = (state = initialState) => (
