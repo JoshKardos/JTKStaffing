@@ -8,7 +8,7 @@ import LoginLayout from './LogIn/LoginLayout'
 import SignUpLayout from './SignUp/SignUpLayout'
 import DashboardLayout from './Dashboard/DashboardLayout'
 import HomeLayout from './Home/HomeLayout'
-import { setTimesheetFileError } from '../Redux/DashboardRedux'
+import { uploadTimesheet, setTimesheetFileError, timesheetUploadError, saveToDatabase, timesheetUploadStart } from '../Redux/DashboardRedux'
 import { signUp, setSignUpError, fetchUserData, login, setLoginError, userLoggedIn, adminLoggedIn } from '../Redux/UserRedux'
 import { resetError } from '../Redux/ErrorRedux'
 import GenericErrorModal from './GenericErrorModal'
@@ -32,7 +32,8 @@ class MainScreen extends Component {
 
   render() {
     const { currentLayout, signUp, errorDescription, resetError, signUpLoading,
-      setSignUpError, login, loginLoading, setLoginError, userState, setTimesheetFileError } = this.props
+      setSignUpError, login, loginLoading, setLoginError, userState, setTimesheetFileError,
+      uploadTimesheet, timesheetUploadStart, timesheetUploadError, saveToDatabase, timesheetUploading } = this.props
     const loggedIn = userLoggedIn(userState)
 
     return (
@@ -41,7 +42,7 @@ class MainScreen extends Component {
         { errorDescription ?
           <GenericErrorModal errorDescription={errorDescription} resetError={resetError} /> : null }
         { !loggedIn && currentLayout === LAYOUTS.HOME && <HomeLayout /> }
-        { loggedIn && currentLayout === LAYOUTS.HOME && <DashboardLayout setTimesheetFileError={setTimesheetFileError} isAdmin={adminLoggedIn(userState)} /> }
+        { loggedIn && currentLayout === LAYOUTS.HOME && <DashboardLayout setTimesheetFileError={setTimesheetFileError} isAdmin={adminLoggedIn(userState)} uploadTimesheet={uploadTimesheet} userState={userState} timesheetUploadStart={timesheetUploadStart} timesheetUploadError={timesheetUploadError} saveToDatabase={saveToDatabase} timesheetUploading={timesheetUploading} /> }
         { currentLayout === LAYOUTS.LOGIN && <LoginLayout login={login} isLoading={loginLoading} setLoginError={setLoginError} /> }
         { currentLayout === LAYOUTS.SIGNUP && <SignUpLayout signUp={signUp} isLoading={signUpLoading} setSignUpError={setSignUpError} /> }
         <div className="ContactTextContainer">
@@ -64,7 +65,12 @@ MainScreen.propTypes = {
   login: PropTypes.func.isRequired,
   loginLoading: PropTypes.bool.isRequired,
   userState: PropTypes.object.isRequired,
-  setTimesheetFileError: PropTypes.func.isRequired
+  setTimesheetFileError: PropTypes.func.isRequired,
+  uploadTimesheet: PropTypes.func.isRequired,
+  timesheetUploadError: PropTypes.func.isRequired,
+  saveToDatabase: PropTypes.func.isRequired,
+  timesheetUploadStart: PropTypes.func.isRequired,
+  timesheetUploading: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -72,7 +78,8 @@ const mapStateToProps = state => ({
   currentLayout: state.LayoutReducers.layoutReducer.currentLayout,
   loginLoading: state.UserReducers.userReducer.loginLoading,
   signUpLoading: state.UserReducers.userReducer.signUpLoading,
-  errorDescription: state.ErrorReducers.errorReducer.errorDescription
+  errorDescription: state.ErrorReducers.errorReducer.errorDescription,
+  timesheetUploading: state.DashboardReducers.dashboardReducer.uploading
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -82,7 +89,11 @@ const mapDispatchToProps = dispatch => ({
   setLoginError: (error) => dispatch(setLoginError(error)),
   setTimesheetFileError: (error) => dispatch(setTimesheetFileError(error)),
   resetError: () => dispatch(resetError()),
-  fetchUserData: (userId) => dispatch(fetchUserData(userId))
+  fetchUserData: (userId) => dispatch(fetchUserData(userId)),
+  uploadTimesheet: (file) => dispatch(uploadTimesheet(file)),
+  saveToDatabase: (timesheetTimePeriod, filepath, id, userId, timestamp) => dispatch(saveToDatabase(timesheetTimePeriod, filepath, id, userId, timestamp)),
+  timesheetUploadError: () => dispatch(timesheetUploadError()),
+  timesheetUploadStart: () => dispatch(timesheetUploadStart())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen)

@@ -18,6 +18,10 @@ import {
 } from './ErrorEpics'
 
 import {
+  saveToDatabase,
+  showUploadSuccessEpic,
+  uploadErrorEpic,
+  uploadCompleteEpic,
   setTimesheetFileError
 } from './DashboardEpics'
 
@@ -40,5 +44,9 @@ export const rootEpic = combineEpics(
   resetErrorOnMenuBarSelectEpic,
 
   // Dashboard Epics
+  saveToDatabase,
+  showUploadSuccessEpic,
+  uploadErrorEpic,
+  uploadCompleteEpic,
   setTimesheetFileError
 );

@@ -1,14 +1,17 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
+import FileUploader from 'react-firebase-file-uploader';
 // import Calendar from 'react-calendar' // https://www.npmjs.com/package/react-calendar
 // import DatePicker from 'react-datepicker'; // https://www.npmjs.com/package/react-datepicker
 // import 'react-datepicker/dist/react-datepicker.css';
 // import ReactDataSheet from 'react-datasheet';
 // // Be sure to include styles at some point, probably during your bootstrapping
 // import 'react-datasheet/lib/react-datasheet.css'; // https://github.com/nadbm/react-datasheet
-import { FilePicker } from 'react-file-picker'
+// import { FilePicker } from 'react-file-picker'
 import DayPicker from 'react-day-picker'; // https://react-day-picker.js.org/examples/selected-week
+import Loader from 'react-loader-spinner'
+import firebase from '../../Firebase/index'
 import 'react-day-picker/lib/style.css';
 import { getWeekDays, getWeekRange } from '../../helpers/CalendarHelpers'
 import redX from '../../redX.png'
@@ -19,10 +22,23 @@ class DashboardLayout extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      timesheetTimestamp: null,
       timesheetFile: null,
       hoverRange: null,
       selectedDays: []
     }
+    this.fileUploader = null
+  }
+
+  startUploadManually = () => {
+    const { setTimesheetFileError } = this.props
+    const { timesheetFile } = this.state;
+
+    if (!navigator.onLine) {
+      setTimesheetFileError({ payload: 'Check internet connection...' })
+      return
+    }
+    this.fileUploader.startUpload(timesheetFile)
   }
 
   handleDayChange = date => {
@@ -47,6 +63,11 @@ class DashboardLayout extends Component {
     this.setState({
       selectedDays: days,
     })
+  }
+
+  clearFields() {
+    console.log(this.fileUploader)
+    this.setState({ timesheetFile: null, selectedDays: [], hoverRange: null })
   }
 
   renderFileName() {
@@ -97,8 +118,8 @@ class DashboardLayout extends Component {
   // }
 
   renderSubmitLayout() {
-    const { setTimesheetFileError } = this.props
-    const { timesheetFile, hoverRange, selectedDays } = this.state
+    const { userState, saveToDatabase, timesheetUploadError, timesheetUploadStart, timesheetUploading } = this.props
+    const { timesheetFile, hoverRange, selectedDays, timesheetTimestamp } = this.state
 
     const daysAreSelected = selectedDays.length > 0;
     const daysSelectedText = `${moment(selectedDays[0]).format('LL')} – ${moment(selectedDays[6]).format('LL')}`
@@ -128,8 +149,9 @@ class DashboardLayout extends Component {
             {this.renderSecondStep()}
             {/* SUBMIT BUTTON */}
             { timesheetFile && daysAreSelected &&
-              <button type="button" style={Styles.SubmitTimesheetButton}>
-                Submit
+              <button type="button" style={Styles.SubmitTimesheetButton} onClick={this.startUploadManually}>
+                { !timesheetUploading && <p>Submit</p> }
+                { timesheetUploading && <Loader type="ThreeDots" color="#00BFFF" height={40} width={80} /> }
               </button> }
           </div>
           <div style={Styles.CalendarContainer}>
@@ -144,15 +166,34 @@ class DashboardLayout extends Component {
               onWeekClick={this.handleWeekClick}
             />
           </div>
-          <FilePicker
-            extensions={['md']}
-            onChange={FileObject => this.setState({ timesheetFile: FileObject })}
-            onError={(error) => setTimesheetFileError({ payload: error })}
-          >
-            <button type="submit" style={Styles.UploadButton}>
-              Click to upload timesheet
-            </button>
-          </FilePicker>
+
+          <FileUploader
+            ref={instance => { this.fileUploader = instance }}
+            onChange={event => this.setState({ timesheetFile: event.target.files[0], timesheetTimestamp: Date.now() })}
+            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" // only .xlsx
+            storageRef={firebase.storage().ref(`timesheets/${userState.id}`)}
+            filename={timesheetTimestamp}
+            onUploadStart={timesheetUploadStart}
+            onUploadError={timesheetUploadError}
+            onUploadSuccess={(filename, task) => {
+              this.clearFields()
+              console.log(task)
+              const timesheetTimePeriod = daysSelectedText
+              const filepath = task.snapshot.metadata.fullPath
+              const timestamp = task.snapshot.metadata.name.split('.')[0]
+              const id = timestamp
+              const userId = userState.id
+              const action = {
+                timesheetTimePeriod,
+                filepath,
+                id,
+                userId,
+                timestamp
+              }
+              return saveToDatabase(action)
+            }}
+            onProgress={this.handleProgress}
+          />
         </div>
       </div>
     )
@@ -170,8 +211,13 @@ class DashboardLayout extends Component {
 }
 
 DashboardLayout.propTypes = {
+  userState: PropTypes.object.isRequired,
   isAdmin: PropTypes.bool.isRequired,
-  setTimesheetFileError: PropTypes.func.isRequired
+  setTimesheetFileError: PropTypes.func.isRequired,
+  saveToDatabase: PropTypes.func.isRequired,
+  timesheetUploadError: PropTypes.func.isRequired,
+  timesheetUploadStart: PropTypes.func.isRequired,
+  timesheetUploading: PropTypes.bool.isRequired
 }
 
 export default DashboardLayout
