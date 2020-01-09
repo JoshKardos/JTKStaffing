@@ -66,7 +66,6 @@ class DashboardLayout extends Component {
   }
 
   clearFields() {
-    console.log(this.fileUploader)
     this.setState({ timesheetFile: null, selectedDays: [], hoverRange: null })
   }
 
@@ -177,7 +176,6 @@ class DashboardLayout extends Component {
             onUploadError={timesheetUploadError}
             onUploadSuccess={(filename, task) => {
               this.clearFields()
-              console.log(task)
               const timesheetTimePeriod = daysSelectedText
               const filepath = task.snapshot.metadata.fullPath
               const timestamp = task.snapshot.metadata.name.split('.')[0]
