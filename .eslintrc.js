@@ -24,6 +24,7 @@ module.exports = {
   ],
   parser: 'babel-eslint',
   rules: {
+    "class-methods-use-this": "off",
     "react/jsx-one-expression-per-line": "off",
     "react/forbid-prop-types": "off",
     "max-len": "off",

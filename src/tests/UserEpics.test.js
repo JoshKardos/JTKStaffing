@@ -20,9 +20,9 @@ import { TYPES as ErrorTypes } from '../Redux/ErrorRedux'
 describe('loginEpic', () => {
   it('dispatches FETCH_USER_DATA after successfully logged in', (done) => {
     const action$ = ActionsObservable.of(
-      { type: UserTypes.LOGIN, email: 'joshkardos@gmail.com', password: 'pass1234' }
+      { type: UserTypes.LOGIN, email: 'admin@gmail.com', password: 'pass1234' }
     )
-    const expectedOutputAction = { type: UserTypes.FETCH_USER_DATA, payload: '0TmdiEZdK8T545CNxzz1jYMZ5Bz1' }
+    const expectedOutputAction = { type: UserTypes.FETCH_USER_DATA, payload: 'jjh421wEerX4Cc6iwH8k1R7SZ7f1' }
     loginEpic(action$)
       .subscribe(actualOutputAction => {
         assert.deepEqual(actualOutputAction, expectedOutputAction)
@@ -31,7 +31,7 @@ describe('loginEpic', () => {
   })
   it('dispatches SET_ERROR after successfully logged in', (done) => {
     const action$ = ActionsObservable.of(
-      { type: UserTypes.LOGIN, email: 'joshkardos@gmail.com', password: 'p' }
+      { type: UserTypes.LOGIN, email: 'admin@gmail.com', password: 'p' }
     )
     const expectedOutputAction = { type: ErrorTypes.SET_ERROR, payload: 'The password is invalid or the user does not have a password.' }
     loginEpic(action$)
@@ -60,7 +60,7 @@ describe('setSignUpErrorEpic', () => {
 describe('startSignUpLoadingEpic', () => {
   it('dispatches START_SIGN_UP_LOADING when user clicks sign up', (done) => {
     const action$ = ActionsObservable.of(
-      { type: UserTypes.SIGN_UP }
+      { type: UserTypes.SIGN_UP_ADMIN }
     )
     const expectedOutputAction = { type: UserTypes.START_SIGN_UP_LOADING }
     startSignUpLoadingEpic(action$)

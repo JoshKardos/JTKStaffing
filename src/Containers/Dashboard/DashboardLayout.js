@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
-import FileUploader from 'react-firebase-file-uploader';
+import FileUploader from 'react-firebase-file-uploader'
+import Generator from 'generate-password'
 // import Calendar from 'react-calendar' // https://www.npmjs.com/package/react-calendar
 // import DatePicker from 'react-datepicker'; // https://www.npmjs.com/package/react-datepicker
 // import 'react-datepicker/dist/react-datepicker.css';
@@ -17,6 +18,12 @@ import { getWeekDays, getWeekRange } from '../../helpers/CalendarHelpers'
 import redX from '../../redX.png'
 import greenCheck from '../../greenCheck.jpg'
 import Styles from './DashboardLayoutStyles'
+import { validateEmail } from '../../helpers/UserHelpers'
+
+const AdminLayouts = {
+  HOME: 'HOME',
+  EMPLOYEES: 'EMPLOYEES'
+}
 
 class DashboardLayout extends Component {
   constructor(props) {
@@ -25,7 +32,14 @@ class DashboardLayout extends Component {
       timesheetTimestamp: null,
       timesheetFile: null,
       hoverRange: null,
-      selectedDays: []
+      selectedDays: [],
+      currentAdminLayout: AdminLayouts.HOME,
+
+      // Add employee state
+      shouldShowAddEmployee: false,
+      email: '',
+      password: '',
+      name: ''
     }
     this.fileUploader = null
   }
@@ -65,8 +79,72 @@ class DashboardLayout extends Component {
     })
   }
 
+  handleNameChange = (evt) => {
+    this.setState({
+      name: evt.target.value
+    })
+  }
+
+  handleEmailChange = (evt) => {
+    this.setState({
+      email: evt.target.value
+    })
+  }
+
+  handlePassChange = (evt) => {
+    this.setState({
+      password: evt.target.value
+    })
+  }
+
+  handleSubmit = (evt) => {
+    const { name, email, password } = this.state
+    const { signUpWorker, setSignUpError } = this.props
+    evt.preventDefault()
+
+    if (!name.replace(/\s+/g, '')) {
+      const action = {
+        payload: 'Name is required'
+      }
+      return setSignUpError(action)
+    }
+
+    if (!email.replace(/\s+/g, '')) {
+      const action = {
+        payload: 'Email is required'
+      }
+      return setSignUpError(action)
+    }
+
+    if (!password.replace(/\s+/g, '')) {
+      const action = {
+        payload: 'Password is required'
+      }
+      return setSignUpError(action)
+    }
+
+    if (!validateEmail(email)) {
+      const action = {
+        payload: 'Invalid email'
+      }
+      return setSignUpError(action)
+    }
+    const action = {
+      name,
+      email,
+      password
+    }
+    return signUpWorker(action)
+  }
+
   clearFields() {
     this.setState({ timesheetFile: null, selectedDays: [], hoverRange: null })
+  }
+
+  addEmployeeClicked() {
+    // const { addEmployeeUnderAdmin } = this.props
+    this.setState({ shouldShowAddEmployee: true, password: Generator.generate({ length: 10 }) })
+    // return addEmployeeUnderAdmin
   }
 
   renderFileName() {
@@ -197,11 +275,110 @@ class DashboardLayout extends Component {
     )
   }
 
+  renderAdminSidePanel() {
+    return (
+      <div style={Styles.adminSidePanel}>
+        <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.HOME })}>Home</button>
+        <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.EMPLOYEES })}>View Employees</button>
+      </div>
+    )
+  }
+
+  renderAdminHomeLayout() {
+    return (
+      <p>Home</p>
+    )
+  }
+
+  renderAdminEmployeesTableData() {
+    const { employees } = this.props
+    if (!employees) return null
+    return employees.map(employee => (
+      <tr key={employee.uid}>
+        <td>{employee.email}</td>
+        <td>{employee.name}</td>
+      </tr>
+    ))
+  }
+
+  renderAddEmployeeLayout() {
+    const { isLoading } = this.props
+    const { email, password, name } = this.state
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <div className="NameContainer">
+            <label className="NameLabel">Name:</label>
+            <input className="NameInput" type="text" value={name} onChange={this.handleNameChange} />
+          </div>
+          <div className="EmailContainer">
+            <label className="EmailLabel">Email:</label>
+            <input className="EmailInput" type="text" value={email} onChange={this.handleEmailChange} />
+          </div>
+          <div className="PasswordContainer">
+            <label className="PasswordLabel">Password:</label>
+            <input className="PasswordInput" value={password} onChange={this.handlePassChange} />
+          </div>
+          <button className="SubmitButton" type="submit">
+            { !isLoading && <p>Sign Up</p> }
+            { isLoading && <Loader type="ThreeDots" color="#00BFFF" height={40} width={80} /> }
+          </button>
+        </form>
+      </div>
+    )
+  }
+
+  renderAdminEmployeesLayout() {
+    const { shouldShowAddEmployee } = this.state
+    return (
+      <div style={Styles.adminEmployeesLayoutContainer}>
+        <table style={Styles.employeesTable}>
+          <thead>
+            <tr>
+              <td style={Styles.employeesTableCell}>Email address</td>
+              <td style={Styles.employeesTableCell}>Name</td>
+            </tr>
+          </thead>
+          <tbody>
+            {this.renderAdminEmployeesTableData()}
+          </tbody>
+        </table>
+        <button style={Styles.addEmployeeButton} type="button" onClick={() => this.addEmployeeClicked()}>Add Employee</button>
+        { shouldShowAddEmployee && this.renderAddEmployeeLayout() }
+      </div>
+    )
+  }
+
+  renderAdminContent() {
+    const { currentAdminLayout } = this.state
+    if (currentAdminLayout === AdminLayouts.HOME) {
+      return this.renderAdminHomeLayout()
+    }
+    if (currentAdminLayout === AdminLayouts.EMPLOYEES) {
+      return this.renderAdminEmployeesLayout()
+    }
+    return null
+  }
+
+  renderAdminLayout() {
+    return (
+      <div style={Styles.DasboardContainer}>
+        {this.renderAdminSidePanel()}
+        {this.renderAdminContent()}
+      </div>
+    )
+  }
+
   render() {
     const { isAdmin } = this.props
-    if (isAdmin) {
+    if (!isAdmin) {
       return (
         this.renderSubmitLayout()
+      )
+    }
+    if (isAdmin) {
+      return (
+        this.renderAdminLayout()
       )
     }
     return null
@@ -209,13 +386,17 @@ class DashboardLayout extends Component {
 }
 
 DashboardLayout.propTypes = {
+  isLoading: PropTypes.bool.isRequired,
+  setSignUpError: PropTypes.func.isRequired,
+  signUpWorker: PropTypes.func.isRequired,
+  employees: PropTypes.array.isRequired,
   userState: PropTypes.object.isRequired,
   isAdmin: PropTypes.bool.isRequired,
   setTimesheetFileError: PropTypes.func.isRequired,
   saveToDatabase: PropTypes.func.isRequired,
   timesheetUploadError: PropTypes.func.isRequired,
   timesheetUploadStart: PropTypes.func.isRequired,
-  timesheetUploading: PropTypes.bool.isRequired
+  timesheetUploading: PropTypes.bool.isRequired,
 }
 
 export default DashboardLayout

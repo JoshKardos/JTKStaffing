@@ -1,7 +1,50 @@
+const CommonBorder = '1px solid black'
 export default {
+  adminSidePanel: {
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: 'white',
+    width: '230px',
+    minWidth: '230px',
+    height: '80px',
+    borderRadius: '2px',
+    paddingTop: '12px',
+    marginLeft: '4px'
+  },
+  adminSidePanelButton: {
+    height: '24px',
+    textAlign: 'center',
+    fontSize: '20px',
+    border: 'none',
+    marginBottom: '12px',
+    cursor: 'pointer'
+  },
+  addEmployeeButton: {
+    marginBottom: '12px'
+  },
+  employeesTable: {
+    cursor: 'pointer',
+    width: '80%',
+    margin: '12px',
+    border: CommonBorder,
+    textAlign: 'left'
+  },
+  employeesTableCell: {
+    borderBottom: CommonBorder,
+    borderRight: CommonBorder,
+    backgroundColor: 'lightgrey'
+  },
+  adminEmployeesLayoutContainer: {
+    backgroundColor: 'white',
+    marginLeft: '12px',
+    width: '100%',
+    textAlign: 'center',
+    paddingBottom: '8px'
+  },
   DasboardContainer: {
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginTop: '12px'
   },
   RecentlySubmittedContainer: {
     display: 'flex',
