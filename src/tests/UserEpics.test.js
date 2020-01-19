@@ -60,7 +60,7 @@ describe('setSignUpErrorEpic', () => {
 describe('startSignUpLoadingEpic', () => {
   it('dispatches START_SIGN_UP_LOADING when user clicks sign up', (done) => {
     const action$ = ActionsObservable.of(
-      { type: UserTypes.SIGN_UP }
+      { type: UserTypes.SIGN_UP_ADMIN }
     )
     const expectedOutputAction = { type: UserTypes.START_SIGN_UP_LOADING }
     startSignUpLoadingEpic(action$)

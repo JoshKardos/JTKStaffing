@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import '../LogIn/LoginLayoutStyles.css'
 import Loader from 'react-loader-spinner'
+import { validateEmail } from '../../helpers/UserHelpers'
 
 class SignUpLayout extends Component {
   constructor() {
@@ -15,18 +16,9 @@ class SignUpLayout extends Component {
     }
   }
 
-  validateEmail = (inputText) => {
-    // eslint-disable-next-line no-useless-escape
-    const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (inputText.match(mailformat)) {
-      return true
-    }
-    return false
-  } // src: https://www.w3resource.com/javascript/form/email-validation.php
-
   handleSubmit = (evt) => {
     const { name, email, password, company, passwordConfirm } = this.state
-    const { signUp, setSignUpError } = this.props
+    const { signUpAdmin, setSignUpError } = this.props
     evt.preventDefault()
 
     if (!name.replace(/\s+/g, '')) {
@@ -71,7 +63,7 @@ class SignUpLayout extends Component {
       return setSignUpError(action)
     }
 
-    if (!this.validateEmail(email)) {
+    if (!validateEmail(email)) {
       const action = {
         payload: 'Invalid email'
       }
@@ -83,7 +75,7 @@ class SignUpLayout extends Component {
       password,
       company
     }
-    return signUp(action)
+    return signUpAdmin(action)
   }
 
   handleNameChange = (evt) => {
@@ -157,7 +149,7 @@ class SignUpLayout extends Component {
 }
 
 SignUpLayout.propTypes = {
-  signUp: PropTypes.func.isRequired,
+  signUpAdmin: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
   setSignUpError: PropTypes.func.isRequired
 }

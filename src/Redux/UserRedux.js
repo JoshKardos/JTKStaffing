@@ -2,7 +2,9 @@ import { combineReducers } from 'redux'
 import { createReducer } from 'redux-create-reducer';
 
 export const TYPES = {
-  SIGN_UP: 'SIGN_UP',
+  SIGN_UP_WORKER: 'SIGN_UP_WORKER',
+  FETCH_ADMIN_WORKERS: 'FETCH_ADMIN_WORKERS',
+  SIGN_UP_ADMIN: 'SIGN_UP_ADMIN',
   LOGIN: 'LOGIN',
   LOG_OUT: 'LOG_OUT',
   FETCH_USER_DATA: 'FETCH_USER_DATA',
@@ -65,8 +67,12 @@ export const setUserData = (state = initialState, action) => (
   { type: TYPES.SET_USER_DATA, ...state, ...action.payload }
 )
 
-export const signUp = (state = initialState) => (
-  { type: TYPES.SIGN_UP, ...state }
+export const signUpAdmin = (state = initialState) => (
+  { type: TYPES.SIGN_UP_ADMIN, ...state }
+)
+
+export const signUpWorker = (state = initialState) => (
+  { type: TYPES.SIGN_UP_WORKER, ...state }
 )
 
 export const userLoggedIn = (state) => !(!state.id || !state.name || !state.company || !state.email)
@@ -78,7 +84,8 @@ const userReducer = createReducer(initialState, {
   LOGIN: login,
   FETCH_USER_DATA: fetchUserData,
   SET_USER_DATA: setUserData,
-  SIGN_UP: signUp,
+  SIGN_UP_ADMIN: signUpAdmin,
+  SIGN_UP_WORKER: signUpWorker,
   START_SIGN_UP_LOADING: startSignUpLoading,
   STOP_SIGN_UP_LOADING: stopSignUpLoading,
   SET_SIGN_UP_ERROR: setSignUpError,

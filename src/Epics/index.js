@@ -1,7 +1,7 @@
 import { combineEpics } from 'redux-observable'
 
 import {
-  signUpEpic,
+  signUpAdminEpic,
   startLoginLoadingEpic,
   stopLoginLoadingEpic,
   startSignUpLoadingEpic,
@@ -10,7 +10,8 @@ import {
   logOutEpic,
   fetchUserDataEpic,
   loginEpic,
-  homePageAfterLoginOrSignUpEpic
+  homePageAfterLoginOrSignUpEpic,
+  signUpWorkerEpic
 } from './UserEpics'
 
 import {
@@ -35,10 +36,11 @@ export const rootEpic = combineEpics(
   fetchUserDataEpic,
   logOutEpic,
   setSignUpErrorEpic,
-  signUpEpic,
+  signUpAdminEpic,
   startSignUpLoadingEpic,
   stopSignUpLoadingEpic,
   homePageAfterLoginOrSignUpEpic,
+  signUpWorkerEpic,
 
   // Error Epics
   resetErrorOnMenuBarSelectEpic,
