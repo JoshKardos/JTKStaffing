@@ -37,7 +37,6 @@ class DashboardLayout extends Component {
 
       // Add employee state
       shouldShowAddEmployee: false,
-      createUserLoading: false,
       email: '',
       password: '',
       name: ''
@@ -303,7 +302,7 @@ class DashboardLayout extends Component {
   }
 
   renderAddEmployeeLayout() {
-    const { isLoading } = this.state
+    const { isLoading } = this.props
     const { email, password, name } = this.state
     return (
       <div>

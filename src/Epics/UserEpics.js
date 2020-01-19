@@ -37,7 +37,7 @@ export const signUpWorkerEpic = (action$, state$) => action$.pipe(
       })
       const userAdminRef = firebase.database().ref(`/admin-workers/${state$.value.UserReducers.userReducer.id}/${uid}`)
       userAdminRef.set(1)
-      return window.location.reload()
+      return window.location.reload() // new user will be logged in
     }).catch((error) => {
       // error
       const errorMessage = error.message
