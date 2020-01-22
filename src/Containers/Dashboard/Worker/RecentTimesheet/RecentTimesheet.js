@@ -23,6 +23,16 @@ class RecentTimesheet extends Component {
       })
   }
 
+  renderSubmittedText(date, dayText) {
+    if (date - Date.now() > -600000) {
+      return <p>Submitted: Just Now </p>
+    }
+    if (date - Date.now() > -86400000) {
+      return <p>Submitted: Today</p>
+    }
+    return <p>Submitted: {dayText}</p>
+  }
+
   render() {
     const { timesheet } = this.props
     const { timesheetUrl } = this.state
@@ -31,9 +41,10 @@ class RecentTimesheet extends Component {
     const dayText = getMMMDDYYYY(date)
     return (
       <div style={Styles.recentTimesheet}>
-        <p>Submitted: {dayText}</p>
+        { this.renderSubmittedText(date, dayText)}
         <p>Days: {timesheet.timesheetTimePeriod}</p>
         <a
+          style={Styles.downloadLink}
           href={timesheetUrl}
           download
         >Download</a>

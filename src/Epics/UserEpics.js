@@ -129,7 +129,7 @@ export const fetchUserDataEpic = (action$, state$) => action$.pipe(
             // eslint-disable-next-line no-useless-return
             return
           })
-          return { type: UserTypes.SET_USER_DATA, payload: { id, name, email, company, admin, timesheets: timesheetArr } }
+          return { type: UserTypes.SET_USER_DATA, payload: { id, name, email, company, admin, timesheets: timesheetArr.reverse() } }
         })
       }
     })

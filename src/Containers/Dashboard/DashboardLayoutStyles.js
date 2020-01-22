@@ -1,18 +1,22 @@
 const CommonBorder = '1px solid black'
 export default {
+  downloadLink: {
+    fontWeight: 'bold'
+  },
   recentTimesheet: {
     paddingBottom: '16px',
     textAlign: 'center',
-    borderBottom: '1px solid black',
+    borderBottom: '8px solid grey',
     paddingLeft: '6px'
   },
   recentTimesheetsList: {
-    margin: '0',
+    opacity: '0.85',
+    backgroundColor: 'white',
     marginTop: '28px',
     padding: '0',
-    minHeight: '400px',
+    overflowY: 'scroll',
     maxHeight: '400px',
-    overflowY: 'scroll'
+    margin: '12px'
   },
   adminSidePanel: {
     display: 'flex',
@@ -61,9 +65,10 @@ export default {
     marginTop: '12px'
   },
   RecentlySubmittedContainer: {
-    backgroundColor: 'white',
+    backgroundColor: 'grey',
     maxWidth: '260px',
-    minWidth: '260px'
+    minWidth: '260px',
+    maxHeight: '460px'
   },
   SubmitContainer: {
     display: 'flex',
@@ -72,11 +77,12 @@ export default {
     backgroundColor: 'wheat',
     paddingBottom: '120px',
     minHeight: '400px',
-    maxHeight: '400px',
     width: '100%'
   },
   RecentlySubmittedText: {
     textAlign: 'center',
+    color: 'white',
+    fontWeight: 'bold',
     width: '100%',
     textDecoration: 'underline'
   },

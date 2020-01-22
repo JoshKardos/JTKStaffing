@@ -194,9 +194,8 @@ class DashboardLayout extends Component {
   renderRecentTimesheets() {
     const { recentlySubmittedTimesheets } = this.props
     if (recentlySubmittedTimesheets.length > 0) {
-      return <ul style={Styles.recentTimesheetsList}> { recentlySubmittedTimesheets.map(timesheet => {
-        return <RecentTimesheet timesheet={timesheet} />
-      }) }
+      return <ul style={Styles.recentTimesheetsList}>
+        { recentlySubmittedTimesheets.map(timesheet => <RecentTimesheet timesheet={timesheet} />) }
       </ul>
     }
     return null
