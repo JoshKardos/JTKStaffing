@@ -1,5 +1,19 @@
 const CommonBorder = '1px solid black'
 export default {
+  recentTimesheet: {
+    paddingBottom: '16px',
+    textAlign: 'center',
+    borderBottom: '1px solid black',
+    paddingLeft: '6px'
+  },
+  recentTimesheetsList: {
+    margin: '0',
+    marginTop: '28px',
+    padding: '0',
+    minHeight: '400px',
+    maxHeight: '400px',
+    overflowY: 'scroll'
+  },
   adminSidePanel: {
     display: 'flex',
     flexDirection: 'column',
@@ -47,10 +61,9 @@ export default {
     marginTop: '12px'
   },
   RecentlySubmittedContainer: {
-    display: 'flex',
     backgroundColor: 'white',
-    flexDirection: 'column',
-    width: '260px'
+    maxWidth: '260px',
+    minWidth: '260px'
   },
   SubmitContainer: {
     display: 'flex',
@@ -58,6 +71,8 @@ export default {
     alignItems: 'center',
     backgroundColor: 'wheat',
     paddingBottom: '120px',
+    minHeight: '400px',
+    maxHeight: '400px',
     width: '100%'
   },
   RecentlySubmittedText: {

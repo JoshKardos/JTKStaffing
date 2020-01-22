@@ -14,7 +14,7 @@ export const TYPES = {
   SET_SIGN_UP_ERROR: 'SET_SIGN_UP_ERROR',
   START_LOGIN_LOADING: 'START_LOGIN_LOADING',
   STOP_LOGIN_LOADING: 'STOP_LOGIN_LOADING',
-  SET_LOGIN_ERROR: 'SET_LOGIN_ERROR',
+  SET_LOGIN_ERROR: 'SET_LOGIN_ERROR'
 }
 
 const initialState = {
@@ -24,11 +24,19 @@ const initialState = {
   email: '',
   signUpLoading: false,
   loginLoading: false,
-  admin: false
+  admin: false,
+  timesheets: []
+  /* TIMESHEET STRUCTURE
+    filepath: "timesheets/AzDGOd6DZeMuue5Ozm5waQ3Nrju2/1579564015132.xlsx"
+    id: "1579564015132"
+    timesheetTimePeriod: "January 26, 2020 – February 1, 2020"
+    timestamp: "1579564015132"
+    userId
+  */
 }
 
 export const logOut = () => (
-  { type: TYPES.LOG_OUT, id: '', name: '', company: '', email: '', signUpLoading: false, loginLoading: false, admin: false }
+  { type: TYPES.LOG_OUT, id: '', name: '', company: '', email: '', signUpLoading: false, loginLoading: false, admin: false, timesheets: [] }
 )
 
 export const login = (state = initialState) => (

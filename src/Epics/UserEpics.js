@@ -26,7 +26,6 @@ export const signUpWorkerEpic = (action$, state$) => action$.pipe(
     const { name, email, password } = action
     return firebase.auth().createUserWithEmailAndPassword(email, password).then((value) => {
       // success
-      console.log('here')
       const { uid } = value.user
       const usersRef = firebase.database().ref(`/users/${uid}`)
       usersRef.set({
@@ -109,9 +108,8 @@ export const fetchUserDataEpic = (action$, state$) => action$.pipe(
       const company = (snapshot.val() && snapshot.val().company) || 'N/A'
       const id = (snapshot.val() && snapshot.val().uid) || 'N/A'
       const admin = (snapshot.val() && snapshot.val().admin) || null
-      console.log(`here ${userId}`)
 
-      if (admin) {
+      if (admin) { // load employees
         return firebase.database().ref(`/admin-workers/${userId}`).once('value').then((adminEmployeesSnapshot) => firebase.database().ref('/users').once('value').then((allUsersSnapshot) => {
           if (!adminEmployeesSnapshot.val()) return { type: UserTypes.SET_USER_DATA, payload: { id, name, email, company, admin } } // no employee
           Object.keys(allUsersSnapshot.val()).forEach(userId => {
@@ -122,8 +120,17 @@ export const fetchUserDataEpic = (action$, state$) => action$.pipe(
           return { type: UserTypes.SET_USER_DATA, payload: { id, name, email, company, admin, employees } }
         }))
       // eslint-disable-next-line no-else-return
-      } else {
-        return { type: UserTypes.SET_USER_DATA, payload: { id, name, email, company, admin } }
+      } else { // load timesheets
+        return firebase.database().ref(`/user-timesheets/${userId}`).once('value').then(userTimesheetsSnapshot => {
+          if (!userTimesheetsSnapshot.val()) return { type: UserTypes.SET_USER_DATA, payload: { id, name, email, company, admin } }
+          let timesheetArr = []
+          Object.keys(userTimesheetsSnapshot.val()).map(key => {
+            timesheetArr = [...timesheetArr, userTimesheetsSnapshot.val()[key]]
+            // eslint-disable-next-line no-useless-return
+            return
+          })
+          return { type: UserTypes.SET_USER_DATA, payload: { id, name, email, company, admin, timesheets: timesheetArr } }
+        })
       }
     })
   })

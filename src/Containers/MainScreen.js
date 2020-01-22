@@ -34,28 +34,26 @@ class MainScreen extends Component {
     const { currentLayout, signUpAdmin, errorDescription, resetError, signUpLoading,
       setSignUpError, login, loginLoading, setLoginError, userState, setTimesheetFileError,
       uploadTimesheet, timesheetUploadStart, timesheetUploadError, saveToDatabase, timesheetUploading,
-      employees, signUpWorker
+      employees, signUpWorker, timesheets
     } = this.props
     const loggedIn = userLoggedIn(userState)
 
     return (
-      <div>
+      <div className="App">
         <MenuBar />
         { errorDescription ?
           <GenericErrorModal errorDescription={errorDescription} resetError={resetError} /> : null }
         { !loggedIn && currentLayout === LAYOUTS.HOME && <HomeLayout /> }
-        { loggedIn && currentLayout === LAYOUTS.HOME && <DashboardLayout isLoading={loginLoading} setSignUpError={setSignUpError} signUpWorker={signUpWorker} setTimesheetFileError={setTimesheetFileError} isAdmin={adminLoggedIn(userState)} uploadTimesheet={uploadTimesheet} userState={userState} timesheetUploadStart={timesheetUploadStart} timesheetUploadError={timesheetUploadError} saveToDatabase={saveToDatabase} timesheetUploading={timesheetUploading} employees={employees} /> }
+        { loggedIn && currentLayout === LAYOUTS.HOME && <DashboardLayout recentlySubmittedTimesheets={timesheets} isLoading={loginLoading} setSignUpError={setSignUpError} signUpWorker={signUpWorker} setTimesheetFileError={setTimesheetFileError} isAdmin={adminLoggedIn(userState)} uploadTimesheet={uploadTimesheet} userState={userState} timesheetUploadStart={timesheetUploadStart} timesheetUploadError={timesheetUploadError} saveToDatabase={saveToDatabase} timesheetUploading={timesheetUploading} employees={employees} /> }
         { currentLayout === LAYOUTS.LOGIN && <LoginLayout login={login} isLoading={loginLoading} setLoginError={setLoginError} /> }
         { currentLayout === LAYOUTS.SIGNUP && <SignUpLayout signUpAdmin={signUpAdmin} isLoading={signUpLoading} setSignUpError={setSignUpError} /> }
-        <div className="ContactTextContainer">
-          <p className="ContactText">Contact us at joshkardos@gmail.com</p>
-        </div>
       </div>
     )
   }
 }
 
 MainScreen.propTypes = {
+  timesheets: PropTypes.array.isRequired,
   employees: PropTypes.array.isRequired,
   currentLayout: PropTypes.string.isRequired,
   signUpAdmin: PropTypes.func.isRequired,
@@ -78,6 +76,7 @@ MainScreen.propTypes = {
 }
 
 const mapStateToProps = state => ({
+  timesheets: state.UserReducers.userReducer.timesheets,
   employees: state.UserReducers.userReducer.employees,
   userState: state.UserReducers.userReducer,
   currentLayout: state.LayoutReducers.layoutReducer.currentLayout,
