@@ -16,6 +16,7 @@ import firebase from '../../Firebase/index'
 import 'react-day-picker/lib/style.css';
 import { getWeekDays, getWeekRange } from '../../helpers/CalendarHelpers'
 import RecentTimesheet from './Worker/RecentTimesheet/RecentTimesheet'
+import AdminTimesheetTile from './Admin/AdminTimesheetTile/AdminTimesheetTile'
 import redX from '../../redX.png'
 import greenCheck from '../../greenCheck.jpg'
 import Styles from './DashboardLayoutStyles'
@@ -23,7 +24,9 @@ import { validateEmail } from '../../helpers/UserHelpers'
 
 const AdminLayouts = {
   HOME: 'HOME',
-  EMPLOYEES: 'EMPLOYEES'
+  TIMESHEETS: 'TIMESHEETS',
+  EMPLOYEES: 'EMPLOYEES',
+  SETTINGS: 'SETTINGS'
 }
 
 class DashboardLayout extends Component {
@@ -286,7 +289,9 @@ class DashboardLayout extends Component {
     return (
       <div style={Styles.adminSidePanel}>
         <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.HOME })}>Home</button>
+        <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.TIMESHEETS })}>View Timesheets</button>
         <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.EMPLOYEES })}>View Employees</button>
+        <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.SETTINGS })}>Settings</button>
       </div>
     )
   }
@@ -356,13 +361,41 @@ class DashboardLayout extends Component {
     )
   }
 
+  renderAdminSettingsLayout() {
+    return (
+      <p>Settings</p>
+    )
+  }
+
+  renderAdminTimesheets() {
+    const { employees } = this.props
+    return employees.map(employee => <AdminTimesheetTile employee={employee} />)
+  }
+
+  renderAdminTimesheetsLayout() {
+    return (
+      <div style={Styles.adminEmployeesLayoutContainer}>
+        <p style={Styles.timesheetHeader}> Timesheets</p>
+        <div style={Styles.adminTimesheetsContainer}>
+          {this.renderAdminTimesheets()}
+        </div>
+      </div>
+    )
+  }
+
   renderAdminContent() {
     const { currentAdminLayout } = this.state
     if (currentAdminLayout === AdminLayouts.HOME) {
       return this.renderAdminHomeLayout()
     }
+    if (currentAdminLayout === AdminLayouts.TIMESHEETS) {
+      return this.renderAdminTimesheetsLayout()
+    }
     if (currentAdminLayout === AdminLayouts.EMPLOYEES) {
       return this.renderAdminEmployeesLayout()
+    }
+    if (currentAdminLayout === AdminLayouts.SETTINGS) {
+      return this.renderAdminSettingsLayout()
     }
     return null
   }

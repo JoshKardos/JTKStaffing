@@ -36,7 +36,6 @@ class RecentTimesheet extends Component {
   render() {
     const { timesheet } = this.props
     const { timesheetUrl } = this.state
-    // eslint-disable-next-line radix
     const date = new Date(parseInt(timesheet.timestamp))
     const dayText = getMMMDDYYYY(date)
     return (

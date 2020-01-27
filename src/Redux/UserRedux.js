@@ -25,7 +25,7 @@ const initialState = {
   signUpLoading: false,
   loginLoading: false,
   admin: false,
-  timesheets: []
+  timesheets: [],
   /* TIMESHEET STRUCTURE
     filepath: "timesheets/AzDGOd6DZeMuue5Ozm5waQ3Nrju2/1579564015132.xlsx"
     id: "1579564015132"
@@ -33,10 +33,17 @@ const initialState = {
     timestamp: "1579564015132"
     userId
   */
+  employees: []
+  /*
+    company:
+    email:
+    uid:
+    name:
+  */
 }
 
 export const logOut = () => (
-  { type: TYPES.LOG_OUT, id: '', name: '', company: '', email: '', signUpLoading: false, loginLoading: false, admin: false, timesheets: [] }
+  { type: TYPES.LOG_OUT, id: '', name: '', company: '', email: '', signUpLoading: false, loginLoading: false, admin: false, timesheets: [], employees: [] }
 )
 
 export const login = (state = initialState) => (
