@@ -1,15 +1,83 @@
 const CommonBorder = '1px solid black'
+const adminTimesheetTile = {
+  marginBottom: '6px',
+  marginTop: '6px',
+  marginLeft: '16px',
+  marginRight: '8px',
+  float: 'left',
+  border: '2px solid black',
+  paddingBottom: '20px',
+  width: '270px',
+  borderRadius: '8px',
+  fontWeight: 'bold'
+}
 export default {
+  CommonBorder: {
+    border: CommonBorder
+  },
+  timesheetTileTableBodyHeadHovered: {
+    cursor: 'pointer',
+    display: 'table',
+    width: '100%',
+    tableLayout: 'fixed',
+    backgroundColor: 'white'
+  },
+  timesheetTileTableBody: {
+    display: 'block',
+    height: '100px',
+    overflow: 'auto'
+  },
+  timesheetTileTableBodyHead: {
+    cursor: 'pointer',
+    display: 'table',
+    width: '100%',
+    tableLayout: 'fixed'
+  },
+  timesheetTileTable: {
+    fontSize: '12px',
+    width: '270px'
+  },
+  adminTimesheetsContainer: {
+    display: 'inline'
+  },
+  adminTimesheetTile: {
+    ...adminTimesheetTile
+  },
+  adminTimesheetTileHover: {
+    ...adminTimesheetTile,
+    backgroundColor: 'lightgrey'
+  },
+  downloadLink: {
+    fontWeight: 'bold'
+  },
+  recentTimesheet: {
+    paddingBottom: '16px',
+    textAlign: 'center',
+    borderBottom: '8px solid grey',
+    paddingLeft: '6px'
+  },
+  recentTimesheetsList: {
+    opacity: '0.85',
+    backgroundColor: 'white',
+    marginTop: '28px',
+    padding: '0',
+    overflowY: 'scroll',
+    maxHeight: '400px',
+    margin: '12px'
+  },
+  timesheetHeader: {
+    fontWeight: 'bold',
+    fontSize: '22px'
+  },
   adminSidePanel: {
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: 'white',
     width: '230px',
     minWidth: '230px',
-    height: '80px',
+    height: '146px',
     borderRadius: '2px',
-    paddingTop: '12px',
-    marginLeft: '4px'
+    paddingTop: '12px'
   },
   adminSidePanelButton: {
     height: '24px',
@@ -47,10 +115,10 @@ export default {
     marginTop: '12px'
   },
   RecentlySubmittedContainer: {
-    display: 'flex',
-    backgroundColor: 'white',
-    flexDirection: 'column',
-    width: '260px'
+    backgroundColor: 'grey',
+    maxWidth: '260px',
+    minWidth: '260px',
+    maxHeight: '460px'
   },
   SubmitContainer: {
     display: 'flex',
@@ -58,10 +126,13 @@ export default {
     alignItems: 'center',
     backgroundColor: 'wheat',
     paddingBottom: '120px',
+    minHeight: '400px',
     width: '100%'
   },
   RecentlySubmittedText: {
     textAlign: 'center',
+    color: 'white',
+    fontWeight: 'bold',
     width: '100%',
     textDecoration: 'underline'
   },

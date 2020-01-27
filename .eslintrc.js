@@ -24,6 +24,8 @@ module.exports = {
   ],
   parser: 'babel-eslint',
   rules: {
+    "radix": "off",
+    "react/jsx-closing-tag-location": "off",
     "class-methods-use-this": "off",
     "react/jsx-one-expression-per-line": "off",
     "react/forbid-prop-types": "off",

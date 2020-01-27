@@ -15,6 +15,8 @@ import Loader from 'react-loader-spinner'
 import firebase from '../../Firebase/index'
 import 'react-day-picker/lib/style.css';
 import { getWeekDays, getWeekRange } from '../../helpers/CalendarHelpers'
+import RecentTimesheet from './Worker/RecentTimesheet/RecentTimesheet'
+import AdminTimesheetTile from './Admin/AdminTimesheetTile/AdminTimesheetTile'
 import redX from '../../redX.png'
 import greenCheck from '../../greenCheck.jpg'
 import Styles from './DashboardLayoutStyles'
@@ -22,7 +24,9 @@ import { validateEmail } from '../../helpers/UserHelpers'
 
 const AdminLayouts = {
   HOME: 'HOME',
-  EMPLOYEES: 'EMPLOYEES'
+  TIMESHEETS: 'TIMESHEETS',
+  EMPLOYEES: 'EMPLOYEES',
+  SETTINGS: 'SETTINGS'
 }
 
 class DashboardLayout extends Component {
@@ -190,9 +194,15 @@ class DashboardLayout extends Component {
     )
   }
 
-  // renderRecentStands() {
-  //   return null
-  // }
+  renderRecentTimesheets() {
+    const { recentlySubmittedTimesheets } = this.props
+    if (recentlySubmittedTimesheets.length > 0) {
+      return <ul style={Styles.recentTimesheetsList}>
+        { recentlySubmittedTimesheets.map(timesheet => <RecentTimesheet timesheet={timesheet} />) }
+      </ul>
+    }
+    return null
+  }
 
   renderSubmitLayout() {
     const { userState, saveToDatabase, timesheetUploadError, timesheetUploadStart, timesheetUploading } = this.props
@@ -215,7 +225,7 @@ class DashboardLayout extends Component {
       <div style={Styles.DasboardContainer}>
         <div style={Styles.RecentlySubmittedContainer}>
           <p style={Styles.RecentlySubmittedText}>Recently Submitted</p>
-          {/* {this.renderRecentStands()} */}
+          {this.renderRecentTimesheets()}
         </div>
         <div style={Styles.SubmitContainer}>
           <h2>Submit</h2>
@@ -243,33 +253,33 @@ class DashboardLayout extends Component {
               onWeekClick={this.handleWeekClick}
             />
           </div>
-
-          <FileUploader
-            ref={instance => { this.fileUploader = instance }}
-            onChange={event => this.setState({ timesheetFile: event.target.files[0], timesheetTimestamp: Date.now() })}
-            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" // only .xlsx
-            storageRef={firebase.storage().ref(`timesheets/${userState.id}`)}
-            filename={timesheetTimestamp}
-            onUploadStart={timesheetUploadStart}
-            onUploadError={timesheetUploadError}
-            onUploadSuccess={(filename, task) => {
-              this.clearFields()
-              const timesheetTimePeriod = daysSelectedText
-              const filepath = task.snapshot.metadata.fullPath
-              const timestamp = task.snapshot.metadata.name.split('.')[0]
-              const id = timestamp
-              const userId = userState.id
-              const action = {
-                timesheetTimePeriod,
-                filepath,
-                id,
-                userId,
-                timestamp
-              }
-              return saveToDatabase(action)
-            }}
-            onProgress={this.handleProgress}
-          />
+          { selectedDays.length > 0 &&
+            <FileUploader
+              ref={instance => { this.fileUploader = instance }}
+              onChange={event => this.setState({ timesheetFile: event.target.files[0], timesheetTimestamp: Date.now() })}
+              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" // only .xlsx
+              storageRef={firebase.storage().ref(`timesheets/${userState.id}`)}
+              filename={timesheetTimestamp}
+              onUploadStart={timesheetUploadStart}
+              onUploadError={timesheetUploadError}
+              onUploadSuccess={(filename, task) => {
+                this.clearFields()
+                const timesheetTimePeriod = daysSelectedText
+                const filepath = task.snapshot.metadata.fullPath
+                const timestamp = task.snapshot.metadata.name.split('.')[0]
+                const id = timestamp
+                const userId = userState.id
+                const action = {
+                  timesheetTimePeriod,
+                  filepath,
+                  id,
+                  userId,
+                  timestamp
+                }
+                return saveToDatabase(action)
+              }}
+              onProgress={this.handleProgress}
+            />}
         </div>
       </div>
     )
@@ -279,7 +289,9 @@ class DashboardLayout extends Component {
     return (
       <div style={Styles.adminSidePanel}>
         <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.HOME })}>Home</button>
+        <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.TIMESHEETS })}>View Timesheets</button>
         <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.EMPLOYEES })}>View Employees</button>
+        <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.SETTINGS })}>Settings</button>
       </div>
     )
   }
@@ -349,13 +361,41 @@ class DashboardLayout extends Component {
     )
   }
 
+  renderAdminSettingsLayout() {
+    return (
+      <p>Settings</p>
+    )
+  }
+
+  renderAdminTimesheets() {
+    const { employees } = this.props
+    return employees.map(employee => <AdminTimesheetTile employee={employee} />)
+  }
+
+  renderAdminTimesheetsLayout() {
+    return (
+      <div style={Styles.adminEmployeesLayoutContainer}>
+        <p style={Styles.timesheetHeader}> Timesheets</p>
+        <div style={Styles.adminTimesheetsContainer}>
+          {this.renderAdminTimesheets()}
+        </div>
+      </div>
+    )
+  }
+
   renderAdminContent() {
     const { currentAdminLayout } = this.state
     if (currentAdminLayout === AdminLayouts.HOME) {
       return this.renderAdminHomeLayout()
     }
+    if (currentAdminLayout === AdminLayouts.TIMESHEETS) {
+      return this.renderAdminTimesheetsLayout()
+    }
     if (currentAdminLayout === AdminLayouts.EMPLOYEES) {
       return this.renderAdminEmployeesLayout()
+    }
+    if (currentAdminLayout === AdminLayouts.SETTINGS) {
+      return this.renderAdminSettingsLayout()
     }
     return null
   }
@@ -386,6 +426,7 @@ class DashboardLayout extends Component {
 }
 
 DashboardLayout.propTypes = {
+  recentlySubmittedTimesheets: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
   setSignUpError: PropTypes.func.isRequired,
   signUpWorker: PropTypes.func.isRequired,
