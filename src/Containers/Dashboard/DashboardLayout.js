@@ -43,9 +43,44 @@ class DashboardLayout extends Component {
       shouldShowAddEmployee: false,
       email: '',
       password: '',
-      name: ''
+      name: '',
+
+      // admin view
+      filtersApplied: [],
+      submissionTimePeriods: new Set(), // 'September 2, 2019 - September 8, 2019'
+      employeeIdSubmissionTimePeriodsMap: {} // { 12345678 : 'September 2, 2019 - September 8, 2019', 987654321 : 'September 2, 2019 - September 8, 2019' }
     }
     this.fileUploader = null
+  }
+
+  handleFilterPressed = (event) => {
+    const { filtersApplied } = this.state
+    const timePeriod = event.target.value
+    if (filtersApplied.includes(timePeriod)) {
+      // remove
+      this.setState({ filtersApplied: filtersApplied.filter(filter => filter !== timePeriod) })
+    } else {
+      // add
+      this.setState({ filtersApplied: [...filtersApplied, timePeriod] })
+    }
+  }
+
+  handleEmployeeIdSubmissionTimePeriodsMap = (userId, timePeriodArr) => {
+    const { employeeIdSubmissionTimePeriodsMap } = this.state
+    const map = { ...employeeIdSubmissionTimePeriodsMap }
+    map[userId] = timePeriodArr
+    this.setState({
+      employeeIdSubmissionTimePeriodsMap: map
+    })
+  }
+
+  handleAddSubmissionTimePeriods = timePeriodsArr => {
+    const { submissionTimePeriods } = this.state
+    const timePeriodSet = new Set(submissionTimePeriods)
+    timePeriodsArr.forEach(item => timePeriodSet.add(item))
+    this.setState({
+      submissionTimePeriods: timePeriodSet
+    })
   }
 
   startUploadManually = () => {
@@ -198,7 +233,7 @@ class DashboardLayout extends Component {
     const { recentlySubmittedTimesheets } = this.props
     if (recentlySubmittedTimesheets.length > 0) {
       return <ul style={Styles.recentTimesheetsList}>
-        { recentlySubmittedTimesheets.map(timesheet => <RecentTimesheet timesheet={timesheet} />) }
+        { recentlySubmittedTimesheets.map(timesheet => <RecentTimesheet key={timesheet.timestamp} timesheet={timesheet} />) }
       </ul>
     }
     return null
@@ -368,14 +403,44 @@ class DashboardLayout extends Component {
   }
 
   renderAdminTimesheets() {
+    const { filtersApplied, employeeIdSubmissionTimePeriodsMap } = this.state
     const { employees } = this.props
-    return employees.map(employee => <AdminTimesheetTile employee={employee} />)
+    return employees.filter(employee => { // check for time period filter
+      if (!filtersApplied || filtersApplied.length <= 0) return true
+      for (let i = 0; i < filtersApplied.length; i += 1) {
+        if (employeeIdSubmissionTimePeriodsMap[employee.uid]
+          && employeeIdSubmissionTimePeriodsMap[employee.uid].includes(filtersApplied[i])) {
+          return true
+        }
+      }
+      return false
+    }).map(employee => <AdminTimesheetTile handleEmployeeIdSubmissionTimePeriodsMap={this.handleEmployeeIdSubmissionTimePeriodsMap} handleAddSubmissionTimePeriods={this.handleAddSubmissionTimePeriods} key={employee.uid} employee={employee} />)
+  }
+
+  renderFilterAdminTimesheets() {
+    const { submissionTimePeriods, filtersApplied } = this.state
+    return (
+      <div style={Styles.submittalDateFilterContainer}>
+        <p style={Styles.filterContainerHeader}>Filter employees by submittal date:</p>
+        <div style={Styles.filtersList}>
+          { [...submissionTimePeriods].map(timePeriod => {
+            const isChecked = filtersApplied.includes(timePeriod)
+            return <label>
+              <input style={Styles.filtersCheckbox} checked={isChecked} type="checkbox" value={timePeriod} onChange={(event) => this.handleFilterPressed(event)} />
+              {timePeriod}
+              <br />
+            </label>
+          }) }
+        </div>
+      </div>
+    )
   }
 
   renderAdminTimesheetsLayout() {
     return (
       <div style={Styles.adminEmployeesLayoutContainer}>
-        <p style={Styles.timesheetHeader}> Timesheets</p>
+        <p style={Styles.timesheetHeader}>Timesheets</p>
+        {this.renderFilterAdminTimesheets()}
         <div style={Styles.adminTimesheetsContainer}>
           {this.renderAdminTimesheets()}
         </div>

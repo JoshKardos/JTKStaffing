@@ -14,15 +14,20 @@ class AdminTimesheetTile extends Component {
   }
 
   componentDidMount() {
+    const { handleEmployeeIdSubmissionTimePeriodsMap, handleAddSubmissionTimePeriods } = this.props
     const { employee } = this.props
     let timesheetArr = []
+    let timePeriodsArr = []
     firebase.database().ref(`/user-timesheets/${employee.uid}`).once('value').then(timesheetSnapshot => {
       if (!timesheetSnapshot.val()) return
       Object.keys(timesheetSnapshot.val()).map(key => {
         timesheetArr = [...timesheetArr, timesheetSnapshot.val()[key]]
+        timePeriodsArr = [...timePeriodsArr, timesheetSnapshot.val()[key].timesheetTimePeriod]
         // eslint-disable-next-line no-useless-return
         return
       })
+      handleAddSubmissionTimePeriods(timePeriodsArr)
+      handleEmployeeIdSubmissionTimePeriodsMap(employee.uid, timePeriodsArr)
       this.setState({ timesheets: timesheetArr.reverse() })
     })
   }
@@ -36,7 +41,7 @@ class AdminTimesheetTile extends Component {
 
   renderTimesheetsTableData() {
     const { timesheets } = this.state
-    return timesheets.map(timesheet => <AdminTimesheetTileTableCell timesheet={timesheet} />)
+    return timesheets.map(timesheet => <AdminTimesheetTileTableCell key={timesheet.timestamp} timesheet={timesheet} />)
   }
 
   renderHoverTable() {
@@ -77,7 +82,9 @@ class AdminTimesheetTile extends Component {
 }
 
 AdminTimesheetTile.propTypes = {
-  employee: PropTypes.object.isRequired
+  employee: PropTypes.object.isRequired,
+  handleEmployeeIdSubmissionTimePeriodsMap: PropTypes.func.isRequired,
+  handleAddSubmissionTimePeriods: PropTypes.func.isRequired
 }
 
 export default AdminTimesheetTile

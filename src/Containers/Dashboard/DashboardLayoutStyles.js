@@ -15,6 +15,31 @@ export default {
   CommonBorder: {
     border: CommonBorder
   },
+  filtersCheckbox: {
+    fontSize: '10px',
+    marginRight: '4px',
+    fontWeight: 'bold'
+  },
+  filtersList: {
+    overflowY: 'auto',
+    height: '80px',
+    marginTop: '36px',
+    textAlign: 'left'
+  },
+  filterContainerHeader: {
+    float: 'left',
+    marginTop: '2px',
+    marginLeft: '4px'
+  },
+  submittalDateFilterContainer: {
+    marginBottom: '42px',
+    marginTop: '12px',
+    marginLeft: '260px',
+    height: '146x',
+    maxWidth: '400px',
+    padding: '6px',
+    border: '2px solid black'
+  },
   timesheetTileTableBodyHeadHovered: {
     cursor: 'pointer',
     display: 'table',
@@ -66,8 +91,10 @@ export default {
     margin: '12px'
   },
   timesheetHeader: {
+    marginLeft: '64px',
+    float: 'left',
     fontWeight: 'bold',
-    fontSize: '22px'
+    fontSize: '24px'
   },
   adminSidePanel: {
     display: 'flex',
