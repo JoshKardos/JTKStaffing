@@ -1,20 +1,33 @@
 .Bar {
   min-width: 800px;
-  width: 100%;
+  width: 98%;
   background-color: white;
-  display: inline-block;
+  display: flex;
+  flex-direction: row;
+  height: 64px;
+}
+.BarContainer {
+  margin-top: 2px;
+  margin-bottom: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .Logo {
   margin-left: 6px;
-  width: 66px;
-  height: 60px;
+  width: 120px;
+  height: 100%;
 }
-.Left {
+/* .Left {
   float: left;
   display: flex;
   flex-direction: row;
   align-items: center;
-
+} */
+.Title {
+  margin: 0 auto;
+  align-self: center;
+  width: 120px;
 }
 .Right {
   float: right;

@@ -65,7 +65,7 @@ class AdminTimesheetTile extends Component {
 
   render() {
     const { employee } = this.props
-    const { hover } = this.state
+    const { hover, timesheets } = this.state
     return (
       <div
         style={hover ? Styles.adminTimesheetTileHover : Styles.adminTimesheetTile}
@@ -76,6 +76,7 @@ class AdminTimesheetTile extends Component {
         <p>{employee.email}</p>
         {this.renderTimesheetMessage()}
         { hover && this.renderHoverTable() }
+        { hover && timesheets.length === 0 && <p>No timesheets uploaded</p>}
       </div>
     )
   }

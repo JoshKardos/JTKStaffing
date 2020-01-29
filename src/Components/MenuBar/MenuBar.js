@@ -9,13 +9,11 @@ import { logOut, userLoggedIn } from '../../Redux/UserRedux'
 
 class MenuBar extends Component {
   renderLoggedIn() {
-    const { setHome, logOut } = this.props
+    const { logOut } = this.props
     return (
       <div className="Bar">
-        <div className="Left">
-          <img src={logo} className="Logo" alt="logo" />
-          <MenuBarItem label="Dashboard" onClick={setHome} />
-        </div>
+        <img src={logo} className="Logo" alt="logo" />
+        <h3 className="Title">JTK Staffing</h3>
         <div className="Right">
           <MenuBarItem label="Log Out" onClick={logOut} />
         </div>
@@ -24,13 +22,11 @@ class MenuBar extends Component {
   }
 
   renderLoggedOut() {
-    const { setHome, setLogin, setSignUp } = this.props
+    const { setLogin, setSignUp } = this.props
     return (
       <div className="Bar">
-        <div className="Left">
-          <img src={logo} className="Logo" alt="logo" />
-          <MenuBarItem label="Home" onClick={setHome} />
-        </div>
+        <img src={logo} className="Logo" alt="logo" />
+        <h3 className="Title">JTK Staffing</h3>
         <div className="Right">
           <MenuBarItem label="Login" onClick={setLogin} />
           <MenuBarItem label="Sign Up" onClick={setSignUp} />
@@ -42,14 +38,17 @@ class MenuBar extends Component {
   render() {
     const { userState } = this.props
     if (userLoggedIn(userState)) {
-      return this.renderLoggedIn()
+      return <div className="BarContainer">
+        {this.renderLoggedIn()}
+      </div>
     }
-    return this.renderLoggedOut()
+    return <div className="BarContainer">
+      {this.renderLoggedOut()}
+    </div>
   }
 }
 
 MenuBar.propTypes = {
-  setHome: PropTypes.func.isRequired,
   setLogin: PropTypes.func.isRequired,
   setSignUp: PropTypes.func.isRequired,
   logOut: PropTypes.func.isRequired,

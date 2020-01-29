@@ -12,7 +12,7 @@ export const uploadErrorEpic = (action$) => action$.pipe(
 export const saveToDatabase = (action$) => action$.pipe(
   ofType(DashboardTypes.SAVE_TO_DATABASE),
   map(action => {
-    const { filepath, id, timestamp, userId, timesheetTimePeriod } = action
+    const { filepath, id, timestamp, userId, timesheetTimePeriod, downloadUrl } = action
     // get timesheet id, user id, timestamp
     const userTimesheetRef = firebase.database().ref(`/user-timesheets/${userId}/${id}/`)
     userTimesheetRef.set({
@@ -20,7 +20,8 @@ export const saveToDatabase = (action$) => action$.pipe(
       filepath,
       id,
       userId,
-      timestamp
+      timestamp,
+      downloadUrl
     })
     return { type: DashboardTypes.UPLOAD_SUCCESS }
   })
