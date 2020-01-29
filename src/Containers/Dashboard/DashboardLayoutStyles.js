@@ -9,11 +9,49 @@ const adminTimesheetTile = {
   paddingBottom: '20px',
   width: '270px',
   borderRadius: '8px',
-  fontWeight: 'bold'
+  fontWeight: 'bold',
+  textAlign: 'center'
 }
 export default {
   CommonBorder: {
     border: CommonBorder
+  },
+  addEmployeeContainer: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  submitButton: {
+    alignSelf: 'center',
+    marginTop: '24px',
+    width: '100px',
+    borderRadius: '4px',
+    fontSize: '12px'
+  },
+  separatorLine: {
+    justifySelf: 'center',
+    width: '97%',
+    margin: '0 auto',
+    height: '2px',
+    backgroundColor: 'grey',
+    marginBottom: '16px',
+    marginTop: '16px'
+  },
+  rowFlex: {
+    marginLeft: '6px',
+    marginRight: '6px',
+    marginTop: '20px',
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  searchTextField: {
+    borderColor: 'black',
+    fontSize: '24px',
+    width: '70%',
+    height: '60px',
+    marginRight: '6px',
+    marginTop: '60px',
+    marginLeft: '-180px',
+    paddingLeft: '4px'
   },
   filtersCheckbox: {
     fontSize: '10px',
@@ -32,9 +70,7 @@ export default {
     marginLeft: '4px'
   },
   submittalDateFilterContainer: {
-    marginBottom: '42px',
-    marginTop: '12px',
-    marginLeft: '260px',
+    marginTop: '28px',
     height: '146x',
     maxWidth: '400px',
     padding: '6px',
@@ -102,7 +138,8 @@ export default {
     backgroundColor: 'white',
     width: '230px',
     minWidth: '230px',
-    height: '146px',
+    height: '84px',
+    // height: '146px',
     borderRadius: '2px',
     paddingTop: '12px'
   },
@@ -115,14 +152,23 @@ export default {
     cursor: 'pointer'
   },
   addEmployeeButton: {
+    width: '100px',
     marginBottom: '12px'
   },
-  employeesTable: {
-    cursor: 'pointer',
+  employeesTableContainer: {
+    marginTop: '90px',
     width: '80%',
-    margin: '12px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  employeesTable: {
+    width: '100%',
+    cursor: 'pointer',
     border: CommonBorder,
-    textAlign: 'left'
+    textAlign: 'left',
+    marginLeft: '24px',
+    marginBottom: '14px'
   },
   employeesTableCell: {
     borderBottom: CommonBorder,
@@ -130,13 +176,17 @@ export default {
     backgroundColor: 'lightgrey'
   },
   adminEmployeesLayoutContainer: {
+    borderRadius: '2px',
+    display: 'block',
+    margin: '0 auto',
     backgroundColor: 'white',
     marginLeft: '12px',
     width: '100%',
-    textAlign: 'center',
     paddingBottom: '8px'
   },
   DasboardContainer: {
+    marginLeft: '26px',
+    marginRight: '26px',
     display: 'flex',
     flexDirection: 'row',
     marginTop: '12px'

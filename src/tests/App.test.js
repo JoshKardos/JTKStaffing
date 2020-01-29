@@ -31,14 +31,14 @@ const mockState = {
 const mockStore = configureMockStore(middlewares)
 
 // eslint-disable-next-line no-undef
-test('renders Home link', () => {
+test('renders Login link', () => {
   // const store = mockStore
   const { getByText } = render(
     <Provider store={mockStore(mockState)}>
       <AppContainer />
     </Provider>
   )
-  const linkElement = getByText(/Home/i);
+  const linkElement = getByText(/Login/i);
   // eslint-disable-next-line no-undef
   expect(linkElement).toBeInTheDocument();
 })

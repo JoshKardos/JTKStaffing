@@ -3,34 +3,21 @@ import PropTypes from 'prop-types'
 import Styles from '../../DashboardLayoutStyles'
 import { getMMMDDYYYY } from '../../../../helpers/CalendarHelpers'
 import download from '../../../../download.png'
-import firebase from '../../../../Firebase/index'
 
 class AdminTimesheetTileTableCell extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      timesheetRowHovered: false,
-      timesheetUrl: null
+      timesheetRowHovered: false
     }
-  }
-
-  componentDidMount() {
-    const { timesheet } = this.props
-    firebase.storage().ref().child(timesheet.filepath).getDownloadURL()
-      .then(url => {
-        this.setState({ timesheetUrl: url })
-      })
-      .catch(error => {
-        console.log(`error ${error}`)
-      })
   }
 
   render() {
     const { timesheet } = this.props
-    const { timesheetRowHovered, timesheetUrl } = this.state
+    const { timesheetRowHovered } = this.state
     const date = new Date(parseInt(timesheet.timestamp))
     return (
-      <a href={timesheetUrl}>
+      <a href={timesheet.downloadUrl}>
         <tr
           onMouseEnter={() => this.setState({ timesheetRowHovered: true })}
           onMouseLeave={() => this.setState({ timesheetRowHovered: false })}

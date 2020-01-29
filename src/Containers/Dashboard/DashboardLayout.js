@@ -10,10 +10,10 @@ import Generator from 'generate-password'
 // // Be sure to include styles at some point, probably during your bootstrapping
 // import 'react-datasheet/lib/react-datasheet.css'; // https://github.com/nadbm/react-datasheet
 // import { FilePicker } from 'react-file-picker'
-import DayPicker from 'react-day-picker'; // https://react-day-picker.js.org/examples/selected-week
+import DayPicker from 'react-day-picker' // https://react-day-picker.js.org/examples/selected-week
 import Loader from 'react-loader-spinner'
 import firebase from '../../Firebase/index'
-import 'react-day-picker/lib/style.css';
+import 'react-day-picker/lib/style.css'
 import { getWeekDays, getWeekRange } from '../../helpers/CalendarHelpers'
 import RecentTimesheet from './Worker/RecentTimesheet/RecentTimesheet'
 import AdminTimesheetTile from './Admin/AdminTimesheetTile/AdminTimesheetTile'
@@ -23,10 +23,10 @@ import Styles from './DashboardLayoutStyles'
 import { validateEmail } from '../../helpers/UserHelpers'
 
 const AdminLayouts = {
-  HOME: 'HOME',
+  // HOME: 'HOME',
   TIMESHEETS: 'TIMESHEETS',
   EMPLOYEES: 'EMPLOYEES',
-  SETTINGS: 'SETTINGS'
+  // SETTINGS: 'SETTINGS'
 }
 
 class DashboardLayout extends Component {
@@ -37,7 +37,7 @@ class DashboardLayout extends Component {
       timesheetFile: null,
       hoverRange: null,
       selectedDays: [],
-      currentAdminLayout: AdminLayouts.HOME,
+      currentAdminLayout: AdminLayouts.TIMESHEETS,
 
       // Add employee state
       shouldShowAddEmployee: false,
@@ -46,6 +46,7 @@ class DashboardLayout extends Component {
       name: '',
 
       // admin view
+      adminTimesheetsSearchText: '',
       filtersApplied: [],
       submissionTimePeriods: new Set(), // 'September 2, 2019 - September 8, 2019'
       employeeIdSubmissionTimePeriodsMap: {} // { 12345678 : 'September 2, 2019 - September 8, 2019', 987654321 : 'September 2, 2019 - September 8, 2019' }
@@ -133,6 +134,12 @@ class DashboardLayout extends Component {
   handlePassChange = (evt) => {
     this.setState({
       password: evt.target.value
+    })
+  }
+
+  searchTextFieldChanged = (evt) => {
+    this.setState({
+      adminTimesheetsSearchText: evt.target.value
     })
   }
 
@@ -255,7 +262,7 @@ class DashboardLayout extends Component {
       hoverRangeEnd: hoverRange && hoverRange.to,
       selectedRangeStart: daysAreSelected && selectedDays[0],
       selectedRangeEnd: daysAreSelected && selectedDays[6],
-    };
+    }
     return (
       <div style={Styles.DasboardContainer}>
         <div style={Styles.RecentlySubmittedContainer}>
@@ -299,19 +306,26 @@ class DashboardLayout extends Component {
               onUploadError={timesheetUploadError}
               onUploadSuccess={(filename, task) => {
                 this.clearFields()
-                const timesheetTimePeriod = daysSelectedText
-                const filepath = task.snapshot.metadata.fullPath
-                const timestamp = task.snapshot.metadata.name.split('.')[0]
-                const id = timestamp
-                const userId = userState.id
-                const action = {
-                  timesheetTimePeriod,
-                  filepath,
-                  id,
-                  userId,
-                  timestamp
-                }
-                return saveToDatabase(action)
+                return firebase.storage().ref(`timesheets/${userState.id}`).child(filename).getDownloadURL()
+                  .then(downloadUrl => {
+                    const timesheetTimePeriod = daysSelectedText
+                    const filepath = task.snapshot.metadata.fullPath
+                    const timestamp = task.snapshot.metadata.name.split('.')[0]
+                    const id = timestamp
+                    const userId = userState.id
+                    const action = {
+                      timesheetTimePeriod,
+                      filepath,
+                      id,
+                      userId,
+                      timestamp,
+                      downloadUrl
+                    }
+                    return saveToDatabase(action)
+                  })
+                  .catch(error => {
+                    timesheetUploadError(error)
+                  })
               }}
               onProgress={this.handleProgress}
             />}
@@ -323,19 +337,19 @@ class DashboardLayout extends Component {
   renderAdminSidePanel() {
     return (
       <div style={Styles.adminSidePanel}>
-        <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.HOME })}>Home</button>
+        {/* <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.HOME })}>Home</button> */}
         <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.TIMESHEETS })}>View Timesheets</button>
         <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.EMPLOYEES })}>View Employees</button>
-        <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.SETTINGS })}>Settings</button>
+        {/* <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.SETTINGS })}>Settings</button> */}
       </div>
     )
   }
 
-  renderAdminHomeLayout() {
-    return (
-      <p>Home</p>
-    )
-  }
+  // renderAdminHomeLayout() {
+  //   return (
+  //     <p>Home</p>
+  //   )
+  // }
 
   renderAdminEmployeesTableData() {
     const { employees } = this.props
@@ -353,7 +367,7 @@ class DashboardLayout extends Component {
     const { email, password, name } = this.state
     return (
       <div>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit} style={Styles.addEmployeeContainer}>
           <div className="NameContainer">
             <label className="NameLabel">Name:</label>
             <input className="NameInput" type="text" value={name} onChange={this.handleNameChange} />
@@ -366,7 +380,7 @@ class DashboardLayout extends Component {
             <label className="PasswordLabel">Password:</label>
             <input className="PasswordInput" value={password} onChange={this.handlePassChange} />
           </div>
-          <button className="SubmitButton" type="submit">
+          <button style={Styles.submitButton} type="submit">
             { !isLoading && <p>Sign Up</p> }
             { isLoading && <Loader type="ThreeDots" color="#00BFFF" height={40} width={80} /> }
           </button>
@@ -379,31 +393,34 @@ class DashboardLayout extends Component {
     const { shouldShowAddEmployee } = this.state
     return (
       <div style={Styles.adminEmployeesLayoutContainer}>
-        <table style={Styles.employeesTable}>
-          <thead>
-            <tr>
-              <td style={Styles.employeesTableCell}>Email address</td>
-              <td style={Styles.employeesTableCell}>Name</td>
-            </tr>
-          </thead>
-          <tbody>
-            {this.renderAdminEmployeesTableData()}
-          </tbody>
-        </table>
-        <button style={Styles.addEmployeeButton} type="button" onClick={() => this.addEmployeeClicked()}>Add Employee</button>
-        { shouldShowAddEmployee && this.renderAddEmployeeLayout() }
+        <p style={Styles.timesheetHeader}>Employees</p>
+        <div style={Styles.employeesTableContainer}>
+          <table style={Styles.employeesTable}>
+            <thead>
+              <tr>
+                <td style={Styles.employeesTableCell}>Email address</td>
+                <td style={Styles.employeesTableCell}>Name</td>
+              </tr>
+            </thead>
+            <tbody>
+              {this.renderAdminEmployeesTableData()}
+            </tbody>
+          </table>
+          <button style={Styles.addEmployeeButton} type="button" onClick={() => this.addEmployeeClicked()}>Add Employee</button>
+          { shouldShowAddEmployee && this.renderAddEmployeeLayout() }
+        </div>
       </div>
     )
   }
 
-  renderAdminSettingsLayout() {
-    return (
-      <p>Settings</p>
-    )
-  }
+  // renderAdminSettingsLayout() {
+  //   return (
+  //     <p>Settings</p>
+  //   )
+  // }
 
   renderAdminTimesheets() {
-    const { filtersApplied, employeeIdSubmissionTimePeriodsMap } = this.state
+    const { filtersApplied, employeeIdSubmissionTimePeriodsMap, adminTimesheetsSearchText } = this.state
     const { employees } = this.props
     return employees.filter(employee => { // check for time period filter
       if (!filtersApplied || filtersApplied.length <= 0) return true
@@ -414,7 +431,9 @@ class DashboardLayout extends Component {
         }
       }
       return false
-    }).map(employee => <AdminTimesheetTile handleEmployeeIdSubmissionTimePeriodsMap={this.handleEmployeeIdSubmissionTimePeriodsMap} handleAddSubmissionTimePeriods={this.handleAddSubmissionTimePeriods} key={employee.uid} employee={employee} />)
+    })
+      .filter(employee => employee.name.includes(adminTimesheetsSearchText))
+      .map(employee => <AdminTimesheetTile handleEmployeeIdSubmissionTimePeriodsMap={this.handleEmployeeIdSubmissionTimePeriodsMap} handleAddSubmissionTimePeriods={this.handleAddSubmissionTimePeriods} key={employee.uid} employee={employee} />)
   }
 
   renderFilterAdminTimesheets() {
@@ -436,11 +455,21 @@ class DashboardLayout extends Component {
     )
   }
 
+  renderSearchTextField() {
+    return (
+      <input type="text" style={Styles.searchTextField} placeholder="Search by employee..." onChange={(event) => this.searchTextFieldChanged(event)} />
+    )
+  }
+
   renderAdminTimesheetsLayout() {
     return (
       <div style={Styles.adminEmployeesLayoutContainer}>
         <p style={Styles.timesheetHeader}>Timesheets</p>
-        {this.renderFilterAdminTimesheets()}
+        <div style={Styles.rowFlex}>
+          {this.renderSearchTextField()}
+          {this.renderFilterAdminTimesheets()}
+        </div>
+        <div style={Styles.separatorLine} />
         <div style={Styles.adminTimesheetsContainer}>
           {this.renderAdminTimesheets()}
         </div>
@@ -450,18 +479,18 @@ class DashboardLayout extends Component {
 
   renderAdminContent() {
     const { currentAdminLayout } = this.state
-    if (currentAdminLayout === AdminLayouts.HOME) {
-      return this.renderAdminHomeLayout()
-    }
+    // if (currentAdminLayout === AdminLayouts.HOME) {
+    //   return this.renderAdminHomeLayout()
+    // }
     if (currentAdminLayout === AdminLayouts.TIMESHEETS) {
       return this.renderAdminTimesheetsLayout()
     }
     if (currentAdminLayout === AdminLayouts.EMPLOYEES) {
       return this.renderAdminEmployeesLayout()
     }
-    if (currentAdminLayout === AdminLayouts.SETTINGS) {
-      return this.renderAdminSettingsLayout()
-    }
+    // if (currentAdminLayout === AdminLayouts.SETTINGS) {
+    //   return this.renderAdminSettingsLayout()
+    // }
     return null
   }
 
