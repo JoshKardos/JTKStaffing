@@ -22,10 +22,13 @@ class MenuBar extends Component {
   }
 
   renderLoggedOut() {
-    const { setLogin, setSignUp } = this.props
+    const { setLogin, setSignUp, setHome } = this.props
     return (
       <div className="Bar">
-        <img src={logo} className="Logo" alt="logo" />
+        <div className="Left">
+          <img src={logo} className="Logo" alt="logo" />
+          <MenuBarItem label="Home" onClick={setHome} />
+        </div>
         <h3 className="Title">JTK Staffing</h3>
         <div className="Right">
           <MenuBarItem label="Login" onClick={setLogin} />
@@ -49,6 +52,7 @@ class MenuBar extends Component {
 }
 
 MenuBar.propTypes = {
+  setHome: PropTypes.func.isRequired,
   setLogin: PropTypes.func.isRequired,
   setSignUp: PropTypes.func.isRequired,
   logOut: PropTypes.func.isRequired,

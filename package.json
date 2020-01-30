@@ -43,8 +43,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm run lint && npm test",
-      "post-update": "npm run build && firebase init && firebase deploy"
+      "pre-push": "npm run lint && npm test"
     }
   },
   "eslintConfig": {
