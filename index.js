@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const nodemailer = require('nodemailer')
 const nodemailerSendgrid = require('nodemailer-sendgrid');
+const path = require('path')
 const app = express()
 
 app.use(bodyParser.json())
@@ -34,6 +35,13 @@ app.post('/api/form', (req, res) => {
     })
   })
 })
+
+if(process.env.NODE_ENV === 'production') {
+  app.use(express.static('client/build'))
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+  })
+}
 
 const PORT = process.env.port || 3001
 
