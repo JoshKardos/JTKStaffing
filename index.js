@@ -4,29 +4,37 @@ const nodemailer = require('nodemailer')
 const nodemailerSendgrid = require('nodemailer-sendgrid');
 const path = require('path')
 const app = express()
+const ApiKeys = require('./ApiKeys')
+
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.post('/api/form', (req, res) => {
+  const { adminEmail, senderName, downloadUrl } = req.body 
   nodemailer.createTestAccount((err, account) => {
     const htmlEmail = `
-      <h3>Admin ID </h3>
-      <p> ${req.body.adminId} </p>
-      <p> ${req.body.name}</p>
-      <a href=${req.body.downloadUrl}>Click to download</p>
+      <div style="border: 1px solid grey; padding:12px;">
+        <h3 style="text-align:center; text-decoration:underline">${senderName} just submitted a timesheet</h3>
+        <div style="text-align: center;">
+          <button style="height:60px; width:200px; margin: 0 auto;">
+            <a style="text-decoration:none;" href=${downloadUrl}>Click to download</p>
+          </button>
+        </div>
+      </div>
     `
     const transporter = nodemailer.createTransport(
       nodemailerSendgrid({
-        apiKey: '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'
+        apiKey: ApiKeys.sendGridKey
       })
     )
+    const toEmail = process.env.NODE_ENV === 'production' ? adminEmail : 'joshkardos@gmail.com'
     const mailOptions = {
       from: 'JTK Staffing <joshkardos@gmail.com>',
-      to: 'joshkardos@gmail.com',
+      to: toEmail,
       replyTo: 'noreply@gmail.com',
-      subject: 'New Message',
-      text: req.body.adminId,
+      subject: 'Timesheet submitted',
+      text: adminEmail,
       html: htmlEmail
     }
     transporter.sendMail(mailOptions, (err, info) => {
@@ -43,7 +51,7 @@ if(process.env.NODE_ENV === 'production') {
   })
 }
 
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 3001
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`)

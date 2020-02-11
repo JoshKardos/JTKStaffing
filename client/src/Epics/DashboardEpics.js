@@ -1,6 +1,6 @@
 import { ofType } from 'redux-observable'
 import axios from 'axios'
-import { map, mapTo } from 'rxjs/operators';
+import { map, mapTo, switchMap } from 'rxjs/operators';
 import { TYPES as DashboardTypes } from '../Redux/DashboardRedux'
 import { TYPES as ErrorTypes } from '../Redux/ErrorRedux'
 import firebase from '../Firebase/index'
@@ -30,15 +30,17 @@ export const saveToDatabase = (action$) => action$.pipe(
 
 export const sendEmailEpic = (action$, state$) => action$.pipe(
   ofType(DashboardTypes.UPLOAD_SUCCESS),
-  map(action => {
+  switchMap(action => {
     const { name, adminId } = state$.value.UserReducers.userReducer
     const downloadUrl = action.payload
-    axios.post('/api/form', {
-      adminId,
-      name,
-      downloadUrl
+    return firebase.database().ref(`/users/${adminId}`).once('value').then(adminSnapshot => {
+      axios.post('/api/form', {
+        adminEmail: adminSnapshot.val()['email'],
+        senderName: name,
+        downloadUrl
+      })
+      return { type: '' }
     })
-    return { type: '' }
   })
 )
 

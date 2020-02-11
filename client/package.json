@@ -41,7 +41,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint src",
     "jest": "npm test",
-    "jest f": "eact-scripts test f"
+    "jest f": "react-scripts test f"
   },
   "eslintConfig": {
     "extends": "react-app"

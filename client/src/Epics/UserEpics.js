@@ -126,10 +126,8 @@ export const fetchUserDataEpic = (action$, state$) => action$.pipe(
           let adminId = ''
           // get admin id
           return firebase.database().ref(`/admin-workers`).once('value').then((adminEmployeesSnapshot) => {
-            console.log(JSON.stringify(adminEmployeesSnapshot))
             Object.keys(adminEmployeesSnapshot.val()).some(id => {
               if (Object.keys(adminEmployeesSnapshot.val()[id]).includes(userId)) {
-                console.log('hete')
                 adminId = id
                 return true
               }
