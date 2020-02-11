@@ -18,6 +18,6 @@ export default firebase
 
 
 // HOSTING
-// npm run build
-// firebase init
-// firebase deploy
+// git add -a
+// git commit -m "[anything]"
+// git push heroku master
