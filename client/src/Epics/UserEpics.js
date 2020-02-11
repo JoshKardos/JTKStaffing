@@ -131,6 +131,7 @@ export const fetchUserDataEpic = (action$, state$) => action$.pipe(
                 adminId = id
                 return true
               }
+              return false
             })
             if (!userTimesheetsSnapshot.val()) return { type: UserTypes.SET_USER_DATA, payload: { id, name, email, company, admin, adminId } }
             Object.keys(userTimesheetsSnapshot.val()).map(key => {
