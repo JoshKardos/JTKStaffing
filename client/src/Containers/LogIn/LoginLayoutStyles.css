@@ -5,19 +5,9 @@
   margin-top: 100px;
 }
 .Login {
-  background-color: white;
+  background-color: lightgray;
   width: 300px;
   height: 200px;
-  border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  padding-top: 16px;
-}
-.SignupError {
-  background-color: white;
-  width: 300px;
-  height: 260px;
   border-radius: 4px;
   display: flex;
   flex-direction: column;

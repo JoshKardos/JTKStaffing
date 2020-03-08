@@ -2,12 +2,10 @@
   display: flex;
   flex-direction: row;
   cursor: pointer;
-  background-color: darkgray;
-  height: 100%;
+  border-bottom: 1px solid white;
   text-align: center;
   width: 100px;
-  margin-right: 6px;  
-  margin-left: 6px;
+  margin: 20px;  
 }
 .Label {
   margin: 0 auto;

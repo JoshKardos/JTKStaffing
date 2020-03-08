@@ -1,20 +1,20 @@
-import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import './Styles/MenuBarStyles.css'
-import MenuBarItem from './MenuBarItem'
 import logo from '../../logo-1.png'
 import { setHomeLayout, setLoginLayout, setSignUpLayout } from '../../Redux/LayoutRedux'
 import { logOut, userLoggedIn } from '../../Redux/UserRedux'
+import MenuBarItem from './MenuBarItem'
+import Styles from './Styles/MenuBarStyles.js'
 
 class MenuBar extends Component {
   renderLoggedIn() {
     const { logOut } = this.props
     return (
-      <div className="Bar">
-        <img src={logo} className="Logo" alt="logo" />
-        <h3 className="Title">JTK Staffing</h3>
-        <div className="Right">
+      <div style={Styles.Bar}>
+        <img src={logo} style={Styles.Logo} alt="logo" />
+        <h3 style={Styles.Title}>JTK Staffing</h3>
+        <div style={Styles.Right}>
           <MenuBarItem label="Log Out" onClick={logOut} />
         </div>
       </div>
@@ -24,13 +24,13 @@ class MenuBar extends Component {
   renderLoggedOut() {
     const { setLogin, setSignUp, setHome } = this.props
     return (
-      <div className="Bar">
-        <div className="Left">
-          <img src={logo} className="Logo" alt="logo" />
+      <div style={Styles.Bar}>
+        <div style={Styles.Left}>
+          <img src={logo} style={Styles.Logo} alt="logo" />
           <MenuBarItem label="Home" onClick={setHome} />
         </div>
-        <h3 className="Title">JTK Staffing</h3>
-        <div className="Right">
+        <h3 style={Styles.Title}>JTK Staffing</h3>
+        <div style={Styles.Right}>
           <MenuBarItem label="Login" onClick={setLogin} />
           <MenuBarItem label="Sign Up" onClick={setSignUp} />
         </div>
@@ -41,11 +41,11 @@ class MenuBar extends Component {
   render() {
     const { userState } = this.props
     if (userLoggedIn(userState)) {
-      return <div className="BarContainer">
+      return <div style={Styles.BarContainer}>
         {this.renderLoggedIn()}
       </div>
     }
-    return <div className="BarContainer">
+    return <div style={Styles.BarContainer}>
       {this.renderLoggedOut()}
     </div>
   }

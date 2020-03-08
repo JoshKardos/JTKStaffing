@@ -12,17 +12,16 @@ import { uploadTimesheet, setTimesheetFileError, timesheetUploadError, saveToDat
 import { signUpWorker, signUpAdmin, setSignUpError, fetchUserData, login, setLoginError, userLoggedIn, adminLoggedIn } from '../Redux/UserRedux'
 import { resetError } from '../Redux/ErrorRedux'
 import GenericErrorModal from './GenericErrorModal'
-import './MainScreenStyles.css'
+import Styles from './MainScreenStyles.js'
 
 class MainScreen extends Component {
   componentDidMount() {
     const { fetchUserData } = this.props
     firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
+      if (user) { // User is signed in.
         const action = {
           payload: user.uid
         }
-        // User is signed in.
         fetchUserData(action)
       } else {
         // No user is signed in.
@@ -39,7 +38,7 @@ class MainScreen extends Component {
     const loggedIn = userLoggedIn(userState)
 
     return (
-      <div className="App">
+      <div style={Styles.App}>
         <MenuBar />
         { errorDescription ?
           <GenericErrorModal errorDescription={errorDescription} resetError={resetError} /> : null }

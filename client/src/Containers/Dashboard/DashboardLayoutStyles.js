@@ -81,7 +81,7 @@ export default {
     display: 'table',
     width: '100%',
     tableLayout: 'fixed',
-    backgroundColor: 'white'
+    backgroundColor: 'lightgrey'
   },
   timesheetTileTableBody: {
     display: 'block',
@@ -106,7 +106,7 @@ export default {
   },
   adminTimesheetTileHover: {
     ...adminTimesheetTile,
-    backgroundColor: 'lightgrey'
+    backgroundColor: 'white'
   },
   downloadLink: {
     fontWeight: 'bold'
@@ -119,11 +119,10 @@ export default {
   },
   recentTimesheetsList: {
     opacity: '0.85',
-    backgroundColor: 'white',
     marginTop: '28px',
     padding: '0',
     overflowY: 'scroll',
-    maxHeight: '400px',
+    height: '100%',
     margin: '12px'
   },
   timesheetHeader: {
@@ -135,12 +134,9 @@ export default {
   adminSidePanel: {
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: 'white',
     width: '230px',
     minWidth: '230px',
-    height: '84px',
-    // height: '146px',
-    borderRadius: '2px',
+    borderRight: '1px solid gray',
     paddingTop: '12px'
   },
   adminSidePanelButton: {
@@ -149,6 +145,10 @@ export default {
     fontSize: '20px',
     border: 'none',
     marginBottom: '12px',
+    cursor: 'pointer',
+    backgroundColor: 'lightgrey',
+    borderBottom: '1px solid grey',
+    paddingBottom: '6px',
     cursor: 'pointer'
   },
   addEmployeeButton: {
@@ -170,16 +170,18 @@ export default {
     marginLeft: '24px',
     marginBottom: '14px'
   },
+  whiteBackground : {
+    backgroundColor: 'white'
+  },
   employeesTableCell: {
     borderBottom: CommonBorder,
     borderRight: CommonBorder,
-    backgroundColor: 'lightgrey'
+    backgroundColor: 'white'
   },
   adminEmployeesLayoutContainer: {
     borderRadius: '2px',
     display: 'block',
     margin: '0 auto',
-    backgroundColor: 'white',
     marginLeft: '12px',
     width: '100%',
     paddingBottom: '8px'
@@ -189,38 +191,40 @@ export default {
     marginRight: '26px',
     display: 'flex',
     flexDirection: 'row',
-    marginTop: '12px'
+    marginTop: '40px',
+    backgroundColor: 'lightGray'
   },
   RecentlySubmittedContainer: {
-    backgroundColor: 'grey',
     maxWidth: '260px',
     minWidth: '260px',
     maxHeight: '460px'
   },
   SubmitContainer: {
     display: 'flex',
+    borderLeft: '1px solid white',
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: 'wheat',
+    backgroundColor: 'lightgrey',
     paddingBottom: '120px',
     minHeight: '400px',
     width: '100%'
   },
   RecentlySubmittedText: {
     textAlign: 'center',
-    color: 'white',
     fontWeight: 'bold',
     width: '100%',
     textDecoration: 'underline'
   },
   SubmitTimesheetButton: {
-    backgroundColor: 'rgb(46, 46, 253)',
+    backgroundColor: '#3b5998',
     marginBottom: '28px',
     marginTop: '6px',
     padding: '10px',
     fontSize: '16px',
     fontWeight: 'bolder',
-    color: 'white'
+    color: 'white',
+    width: '180px',
+    borderRadius: '8px'
   },
   UploadButton: {
     padding: '10px',

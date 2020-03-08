@@ -49,8 +49,6 @@ class LoginPage extends Component {
   }
 
   render() {
-    // NOTE: I use data-attributes for easier E2E testing
-    // but you don't need to target those (any css-selector will work)
     const { email, password } = this.state
     const { isLoading } = this.props
     return (
@@ -67,7 +65,7 @@ class LoginPage extends Component {
             </div>
             <button className="SubmitButton" type="submit">
               { !isLoading && <p>Login</p> }
-              { isLoading && <Loader type="ThreeDots" color="#00BFFF" height={40} width={80} /> }
+              { isLoading && <Loader type="ThreeDots" color="#3b5998" height={40} width={80} /> }
             </button>
           </form>
         </div>

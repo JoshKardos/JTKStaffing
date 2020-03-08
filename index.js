@@ -39,7 +39,7 @@ app.post('/api/form', (req, res) => {
     }
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) return console.log(err)
-      console.log('Email sent')
+      console.log(`Email sent to ${toEmail}`)
     })
   })
 })

@@ -338,8 +338,8 @@ class DashboardLayout extends Component {
     return (
       <div style={Styles.adminSidePanel}>
         {/* <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.HOME })}>Home</button> */}
-        <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.TIMESHEETS })}>View Timesheets</button>
-        <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.EMPLOYEES })}>View Employees</button>
+        <div style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.TIMESHEETS })}>View Timesheets</div>
+        <div style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.EMPLOYEES })}>View Employees</div>
         {/* <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.SETTINGS })}>Settings</button> */}
       </div>
     )
@@ -354,8 +354,8 @@ class DashboardLayout extends Component {
   renderAdminEmployeesTableData() {
     const { employees } = this.props
     if (!employees) return null
-    return employees.map(employee => (
-      <tr key={employee.uid}>
+    return employees.map((employee, index) => (
+      <tr style={index % 2 == 1 ? Styles.whiteBackground : null} key={employee.uid}>
         <td>{employee.email}</td>
         <td>{employee.name}</td>
       </tr>
