@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import './LoginLayoutStyles.css'
+import Styles from './LoginLayoutStyles'
 import PropTypes from 'prop-types'
 import Loader from 'react-loader-spinner'
 
@@ -52,21 +52,24 @@ class LoginPage extends Component {
     const { email, password } = this.state
     const { isLoading } = this.props
     return (
-      <div className="Container">
-        <div className="Login">
+      <div style={Styles.Container}>
+        <div style={Styles.Login}>
           <form onSubmit={this.handleSubmit}>
-            <div className="EmailContainer">
-              <label className="EmailLabel">Email:</label>
-              <input className="EmailInput" type="text" data-test="email" value={email} onChange={this.handleEmailChange} />
+            <div style={Styles.EmailContainer}>
+              <label style={Styles.EmailLabel}>Email:</label>
+              <input style={Styles.EmailInput} type="text" data-test="email" value={email} onChange={this.handleEmailChange} />
             </div>
-            <div className="PasswordContainer">
-              <label className="PasswordLabel">Password:</label>
-              <input className="PasswordInput" type="password" data-test="password" value={password} onChange={this.handlePassChange} />
+            <div style={Styles.PasswordContainer}>
+              <label style={Styles.PasswordLabel}>Password:</label>
+              <input style={Styles.PasswordInput} type="password" data-test="password" value={password} onChange={this.handlePassChange} />
             </div>
-            <button className="SubmitButton" type="submit">
+            <button style={Styles.SubmitButton} type="submit">
               { !isLoading && <p>Login</p> }
               { isLoading && <Loader type="ThreeDots" color="#3b5998" height={40} width={80} /> }
             </button>
+            <div>
+              Forgot Password?
+            </div>
           </form>
         </div>
       </div>

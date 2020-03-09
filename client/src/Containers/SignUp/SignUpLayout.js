@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import '../LogIn/LoginLayoutStyles.css'
+import Styles from '../LogIn/LoginLayoutStyles.js'
 import Loader from 'react-loader-spinner'
 import { validateEmail } from '../../helpers/UserHelpers'
 
@@ -114,30 +114,30 @@ class SignUpLayout extends Component {
     const { email, password, passwordConfirm, company, name } = this.state
     const { isLoading } = this.props
     return (
-      <div className="Container">
-        <div className="Login">
+      <div style={Styles.Container}>
+        <div style={Styles.Login}>
           <form onSubmit={this.handleSubmit}>
-            <div className="NameContainer">
-              <label className="NameLabel">Name:</label>
-              <input className="NameInput" type="text" data-test="email" value={name} onChange={this.handleNameChange} />
+            <div style={Styles.NameContainer}>
+              <label style={Styles.NameLabel}>Name:</label>
+              <input style={Styles.NameInput} type="text" data-test="email" value={name} onChange={this.handleNameChange} />
             </div>
-            <div className="EmailContainer">
-              <label className="EmailLabel">Email:</label>
-              <input className="EmailInput" type="text" data-test="username" value={email} onChange={this.handleEmailChange} />
+            <div style={Styles.EmailContainer}>
+              <label style={Styles.EmailLabel}>Email:</label>
+              <input style={Styles.EmailInput} type="text" data-test="username" value={email} onChange={this.handleEmailChange} />
             </div>
-            <div className="CompanyContainer">
-              <label className="CompanyLabel">Company:</label>
-              <input className="CompanyInput" type="text" data-test="company" value={company} onChange={this.handleCompanyChange} />
+            <div style={Styles.CompanyContainer}>
+              <label style={Styles.CompanyLabel}>Company:</label>
+              <input style={Styles.CompanyInput} type="text" data-test="company" value={company} onChange={this.handleCompanyChange} />
             </div>
-            <div className="PasswordContainer">
-              <label className="PasswordLabel">Password:</label>
-              <input className="PasswordInput" type="password" data-test="password" value={password} onChange={this.handlePassChange} />
+            <div style={Styles.PasswordContainer}>
+              <label style={Styles.PasswordLabel}>Password:</label>
+              <input style={Styles.PasswordInput} type="password" data-test="password" value={password} onChange={this.handlePassChange} />
             </div>
-            <div className="PasswordContainer2">
-              <label className="PasswordLabel2">Password:</label>
-              <input className="PasswordInput2" type="password" data-test="password" value={passwordConfirm} onChange={this.handlePassConfirmChange} />
+            <div style={Styles.PasswordContainer2}>
+              <label style={Styles.PasswordLabel2}>Password:</label>
+              <input style={Styles.PasswordInput2} type="password" data-test="password" value={passwordConfirm} onChange={this.handlePassConfirmChange} />
             </div>
-            <button className="SubmitButton" type="submit">
+            <button style={Styles.SubmitButton} type="submit">
               { !isLoading && <p>Sign Up</p> }
               { isLoading && <Loader type="ThreeDots" color="#00BFFF" height={40} width={80} /> }
             </button>
