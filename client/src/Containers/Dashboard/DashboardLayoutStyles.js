@@ -16,9 +16,32 @@ export default {
   CommonBorder: {
     border: CommonBorder
   },
+  SettingsLayoutContainer: {
+    margin: '0 auto',
+    marginLeft: '40px',
+    marginRight: '40px',
+    width: '100%',
+    fontSize: '14px'
+  },
+  SettingsPassword: {
+    width: '100px',
+    marginLeft: '89px'
+  },
+  SettingsEmail: {
+    width: '100px',
+    marginLeft: '115px'
+  },
+  EmailContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottom: '2px solid white'
+  },
   addEmployeeContainer: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   submitButton: {
     alignSelf: 'center',

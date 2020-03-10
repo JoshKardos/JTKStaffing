@@ -75,6 +75,22 @@ export default {
     width: '180px',
     marginLeft: '4px'
   },
+  SendPasswordResetButton: {
+    marginTop: '24px',
+    width: '150px',
+    borderRadius: '4px',
+    fontSize: '12px'
+  },
+  PasswordResetBackButton: {
+    width: '20px',
+    height: '19px',
+    cursor: 'pointer',
+    alignSelf: 'start',
+    textAlign: 'center',
+    marginLeft: '22px',
+    marginBottom: '20px',
+    border: '1px solid black'
+  },
   SubmitButton: {
     marginTop: '24px',
     width: '100px',
@@ -90,5 +106,9 @@ export default {
   XButton: {
     marginRight: '6px',
     color: 'red'
+  },
+  ForgotPassword: {
+    marginTop: '26px',
+    cursor: 'pointer'
   }
 }

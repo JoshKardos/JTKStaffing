@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import logo from '../../logo-1.png'
+import logo from '../../Images/logo-1.png'
 import { setHomeLayout, setLoginLayout, setSignUpLayout } from '../../Redux/LayoutRedux'
 import { logOut, userLoggedIn } from '../../Redux/UserRedux'
 import MenuBarItem from './MenuBarItem'

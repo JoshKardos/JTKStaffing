@@ -2,17 +2,19 @@ import React, { Component } from 'react'
 import Styles from './LoginLayoutStyles'
 import PropTypes from 'prop-types'
 import Loader from 'react-loader-spinner'
+import firebase from '../../Firebase/index'
 
 class LoginPage extends Component {
   constructor() {
     super()
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      forgotPassword: false
     }
   }
 
-  handleSubmit = (evt) => {
+  handleLogin = (evt) => {
     const { email, password } = this.state
     const { login, setLoginError } = this.props
     evt.preventDefault()
@@ -48,13 +50,63 @@ class LoginPage extends Component {
     })
   }
 
+  handleSendPasswordReset = (evt) => {
+    const { email } = this.state
+    const { setLoginError } = this.props
+    evt.preventDefault() // doesn't rerender
+
+    if (!email) {
+      const action = {
+        payload: 'Email is required'
+      }
+      return setLoginError(action)
+    }
+    const auth = firebase.auth();
+    auth.sendPasswordResetEmail(email).then(function() {
+      // Email sent.
+      const action = {
+        payload: 'Password reset email sent'
+      }
+      return setLoginError(action)
+    }).catch(function(error) {
+      // An error happened.
+      const action = {
+        payload: error.message
+      }
+      return setLoginError(action)
+    });
+  }
+
   render() {
-    const { email, password } = this.state
+    const { email, password, forgotPassword } = this.state
     const { isLoading } = this.props
+
+    if (forgotPassword) {
+      return (
+        <div style={Styles.Container}>
+          <div style={Styles.Login}>
+            <form onSubmit={this.handleSendPasswordReset}>
+              <div style={Styles.PasswordResetBackButton} onClick={() => this.setState({forgotPassword: false})}>
+                X
+              </div>
+              <div style={Styles.EmailContainer}>
+                <label style={Styles.EmailLabel}>Email:</label>
+                <input style={Styles.EmailInput} type="text" data-test="email" value={email} onChange={this.handleEmailChange} />
+              </div>
+              <button style={Styles.SendPasswordResetButton} type="submit">
+                <p>Send password reset</p>
+              </button>
+            </form>
+          </div>
+        </div>
+      )
+    }
+
+
     return (
       <div style={Styles.Container}>
         <div style={Styles.Login}>
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={this.handleLogin}>
             <div style={Styles.EmailContainer}>
               <label style={Styles.EmailLabel}>Email:</label>
               <input style={Styles.EmailInput} type="text" data-test="email" value={email} onChange={this.handleEmailChange} />
@@ -67,7 +119,7 @@ class LoginPage extends Component {
               { !isLoading && <p>Login</p> }
               { isLoading && <Loader type="ThreeDots" color="#3b5998" height={40} width={80} /> }
             </button>
-            <div>
+            <div style={Styles.ForgotPassword} onClick={() => this.setState({forgotPassword: true})}>
               Forgot Password?
             </div>
           </form>

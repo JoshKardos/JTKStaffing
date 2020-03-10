@@ -17,8 +17,8 @@ import 'react-day-picker/lib/style.css'
 import { getWeekDays, getWeekRange } from '../../helpers/CalendarHelpers'
 import RecentTimesheet from './Worker/RecentTimesheet/RecentTimesheet'
 import AdminTimesheetTile from './Admin/AdminTimesheetTile/AdminTimesheetTile'
-import redX from '../../redX.png'
-import greenCheck from '../../greenCheck.jpg'
+import redX from '../../Images/redX.png'
+import greenCheck from '../../Images/greenCheck.jpg'
 import Styles from './DashboardLayoutStyles'
 import { validateEmail } from '../../helpers/UserHelpers'
 
@@ -26,7 +26,7 @@ const AdminLayouts = {
   // HOME: 'HOME',
   TIMESHEETS: 'TIMESHEETS',
   EMPLOYEES: 'EMPLOYEES',
-  // SETTINGS: 'SETTINGS'
+  SETTINGS: 'SETTINGS'
 }
 
 class DashboardLayout extends Component {
@@ -37,7 +37,7 @@ class DashboardLayout extends Component {
       timesheetFile: null,
       hoverRange: null,
       selectedDays: [],
-      currentAdminLayout: AdminLayouts.TIMESHEETS,
+      currentAdminLayout: AdminLayouts.SETTINGS,
 
       // Add employee state
       shouldShowAddEmployee: false,
@@ -340,7 +340,7 @@ class DashboardLayout extends Component {
         {/* <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.HOME })}>Home</button> */}
         <div style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.TIMESHEETS })}>View Timesheets</div>
         <div style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.EMPLOYEES })}>View Employees</div>
-        {/* <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.SETTINGS })}>Settings</button> */}
+        <div style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.SETTINGS })}>Settings</div>
       </div>
     )
   }
@@ -413,11 +413,30 @@ class DashboardLayout extends Component {
     )
   }
 
-  // renderAdminSettingsLayout() {
-  //   return (
-  //     <p>Settings</p>
-  //   )
-  // }
+  renderAdminSettingsLayout() {
+    const { userState } = this.props
+    const { email } = userState
+
+    return (
+      <div style={Styles.SettingsLayoutContainer}>
+        <div style={Styles.EmailContainer}>
+          <p>Email</p>
+          <p style={Styles.SettingsEmail}>
+            {email}
+          </p>
+          <div>
+
+          </div>
+        </div>
+        <div style={Styles.EmailContainer}>
+          <p>Password</p>
+          <p style={Styles.SettingsPassword}>
+            **********
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   renderAdminTimesheets() {
     const { filtersApplied, employeeIdSubmissionTimePeriodsMap, adminTimesheetsSearchText } = this.state
@@ -488,9 +507,9 @@ class DashboardLayout extends Component {
     if (currentAdminLayout === AdminLayouts.EMPLOYEES) {
       return this.renderAdminEmployeesLayout()
     }
-    // if (currentAdminLayout === AdminLayouts.SETTINGS) {
-    //   return this.renderAdminSettingsLayout()
-    // }
+    if (currentAdminLayout === AdminLayouts.SETTINGS) {
+      return this.renderAdminSettingsLayout()
+    }
     return null
   }
 

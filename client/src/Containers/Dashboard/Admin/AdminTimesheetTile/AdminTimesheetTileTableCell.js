@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Styles from '../../DashboardLayoutStyles'
 import { getMMMDDYYYY } from '../../../../helpers/CalendarHelpers'
-import download from '../../../../download.png'
+import download from '../../../../Images/download.png'
 
 class AdminTimesheetTileTableCell extends Component {
   constructor(props) {
