@@ -98,7 +98,6 @@ export const stopLoginLoadingEpic = (action$, state$) => action$.pipe(
 
 export const fetchUserDataEpic = (action$, state$) => action$.pipe(
   ofType(UserTypes.FETCH_USER_DATA),
-  filter(() => !userLoggedIn(state$.value.UserReducers.userReducer)), // only fetch if user is not logged in
   switchMap(action => {
     const userId = action.payload
     let employees = []

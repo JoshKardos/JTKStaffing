@@ -30,7 +30,7 @@ class MainScreen extends Component {
   }
 
   render() {
-    const { currentLayout, signUpAdmin, errorDescription, resetError, signUpLoading,
+    const { fetchUserData, currentLayout, signUpAdmin, errorDescription, resetError, signUpLoading,
       setSignUpError, login, loginLoading, setLoginError, userState, setTimesheetFileError,
       uploadTimesheet, timesheetUploadStart, timesheetUploadError, saveToDatabase, timesheetUploading,
       employees, signUpWorker, timesheets
@@ -43,7 +43,7 @@ class MainScreen extends Component {
         { errorDescription ?
           <GenericErrorModal errorDescription={errorDescription} resetError={resetError} /> : null }
         { !loggedIn && currentLayout === LAYOUTS.HOME && <HomeLayout /> }
-        { loggedIn && currentLayout === LAYOUTS.HOME && <DashboardLayout recentlySubmittedTimesheets={timesheets} isLoading={loginLoading} setSignUpError={setSignUpError} signUpWorker={signUpWorker} setTimesheetFileError={setTimesheetFileError} isAdmin={adminLoggedIn(userState)} uploadTimesheet={uploadTimesheet} userState={userState} timesheetUploadStart={timesheetUploadStart} timesheetUploadError={timesheetUploadError} saveToDatabase={saveToDatabase} timesheetUploading={timesheetUploading} employees={employees} /> }
+        { loggedIn && currentLayout === LAYOUTS.HOME && <DashboardLayout fetchUserData={fetchUserData} recentlySubmittedTimesheets={timesheets} isLoading={loginLoading} setSignUpError={setSignUpError} signUpWorker={signUpWorker} setTimesheetFileError={setTimesheetFileError} isAdmin={adminLoggedIn(userState)} uploadTimesheet={uploadTimesheet} userState={userState} timesheetUploadStart={timesheetUploadStart} timesheetUploadError={timesheetUploadError} saveToDatabase={saveToDatabase} timesheetUploading={timesheetUploading} employees={employees} /> }
         { currentLayout === LAYOUTS.LOGIN && <LoginLayout login={login} isLoading={loginLoading} setLoginError={setLoginError} /> }
         { currentLayout === LAYOUTS.SIGNUP && <SignUpLayout signUpAdmin={signUpAdmin} isLoading={signUpLoading} setSignUpError={setSignUpError} /> }
       </div>

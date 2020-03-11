@@ -21,6 +21,7 @@ import redX from '../../Images/redX.png'
 import greenCheck from '../../Images/greenCheck.jpg'
 import Styles from './DashboardLayoutStyles'
 import { validateEmail } from '../../helpers/UserHelpers'
+import edit from '../../Images/edit.png'
 
 const AdminLayouts = {
   // HOME: 'HOME',
@@ -29,14 +30,29 @@ const AdminLayouts = {
   SETTINGS: 'SETTINGS'
 }
 
+const EmployeeLayouts = {
+  SUBMIT: 'SUBMIT',
+  RECENT: 'RECENT',
+  SETTINGS: 'SETTINGS'
+}
+
+const UserSetting = { 
+  EMAIL: "Email",
+  PASSWORD: "Password",
+  NAME: "Name"
+}
+
 class DashboardLayout extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      // employee state
       timesheetTimestamp: null,
       timesheetFile: null,
       hoverRange: null,
       selectedDays: [],
+
+      currentEmployeeLayout: EmployeeLayouts.SUBMIT,
       currentAdminLayout: AdminLayouts.SETTINGS,
 
       // Add employee state
@@ -49,7 +65,14 @@ class DashboardLayout extends Component {
       adminTimesheetsSearchText: '',
       filtersApplied: [],
       submissionTimePeriods: new Set(), // 'September 2, 2019 - September 8, 2019'
-      employeeIdSubmissionTimePeriodsMap: {} // { 12345678 : 'September 2, 2019 - September 8, 2019', 987654321 : 'September 2, 2019 - September 8, 2019' }
+      employeeIdSubmissionTimePeriodsMap: {}, // { 12345678 : 'September 2, 2019 - September 8, 2019', 987654321 : 'September 2, 2019 - September 8, 2019' }
+    
+      // settings
+      editting: null,
+      newSettingEmail: '',
+      newEmailPassword: '',
+      oldPassword: '',
+      newPassword: ''
     }
     this.fileUploader = null
   }
@@ -246,7 +269,60 @@ class DashboardLayout extends Component {
     return null
   }
 
-  renderSubmitLayout() {
+  renderEmployeeLayout() {
+    return (
+      <div style={Styles.DasboardContainer}>
+        { this.renderEmployeeSidePanel() }
+        { this.renderEmployeeContent() }
+      </div>
+    )
+  }
+
+  renderEmployeeContent = () => {
+    const { currentEmployeeLayout } = this.state
+
+    if (currentEmployeeLayout === EmployeeLayouts.SUBMIT) {
+      return this.renderEmployeeSubmitLayout()
+    }
+    if (currentEmployeeLayout === EmployeeLayouts.RECENT) {
+      return this.renderEmployeeRecentlySubmittedLayout()
+    }
+    if (currentEmployeeLayout === EmployeeLayouts.SETTINGS) {
+      return this.renderAdminSettingsLayout()
+    }
+    return null
+  }
+
+  renderEmployeeSidePanel = () => {
+    return (
+      <div style={Styles.adminSidePanel}>
+        <div style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentEmployeeLayout: EmployeeLayouts.SUBMIT })}>Submit</div>
+        <div style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentEmployeeLayout: EmployeeLayouts.RECENT })}>Recent</div>
+        <div style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentEmployeeLayout: EmployeeLayouts.SETTINGS })}>Settings</div>
+      </div>
+    )
+  }
+
+  renderAdminSidePanel() {
+    return (
+      <div style={Styles.adminSidePanel}>
+        <div style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.TIMESHEETS })}>View Timesheets</div>
+        <div style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.EMPLOYEES })}>View Employees</div>
+        <div style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.SETTINGS })}>Settings</div>
+      </div>
+    )
+  }
+
+  renderEmployeeRecentlySubmittedLayout = () => {
+    return (
+      <div style={Styles.RecentlySubmittedContainer}>
+        <p style={Styles.RecentlySubmittedText}>Recently Submitted</p>
+        { this.renderRecentTimesheets() }
+      </div> 
+    )
+  }
+
+  renderEmployeeSubmitLayout = () => {
     const { userState, saveToDatabase, timesheetUploadError, timesheetUploadStart, timesheetUploading } = this.props
     const { timesheetFile, hoverRange, selectedDays, timesheetTimestamp } = this.state
 
@@ -264,87 +340,69 @@ class DashboardLayout extends Component {
       selectedRangeEnd: daysAreSelected && selectedDays[6],
     }
     return (
-      <div style={Styles.DasboardContainer}>
-        <div style={Styles.RecentlySubmittedContainer}>
-          <p style={Styles.RecentlySubmittedText}>Recently Submitted</p>
-          {this.renderRecentTimesheets()}
+      <div style={Styles.SubmitContainer}>
+        <h2>Submit</h2>
+        <div style={Styles.StepsList}>
+          {/* FIRST STEP */ }
+          {this.renderFirstStep(daysAreSelected, daysSelectedText)}
+          {/* SECOND STEP */}
+          {this.renderSecondStep()}
+          {/* SUBMIT BUTTON */}
+          { timesheetFile && daysAreSelected &&
+            <button type="button" style={Styles.SubmitTimesheetButton} onClick={this.startUploadManually}>
+              { !timesheetUploading && <p>Submit</p> }
+              { timesheetUploading && <Loader type="ThreeDots" color="#00BFFF" height={40} width={80} /> }
+            </button> }
         </div>
-        <div style={Styles.SubmitContainer}>
-          <h2>Submit</h2>
-          <div style={Styles.StepsList}>
-            {/* FIRST STEP */ }
-            {this.renderFirstStep(daysAreSelected, daysSelectedText)}
-            {/* SECOND STEP */}
-            {this.renderSecondStep()}
-            {/* SUBMIT BUTTON */}
-            { timesheetFile && daysAreSelected &&
-              <button type="button" style={Styles.SubmitTimesheetButton} onClick={this.startUploadManually}>
-                { !timesheetUploading && <p>Submit</p> }
-                { timesheetUploading && <Loader type="ThreeDots" color="#00BFFF" height={40} width={80} /> }
-              </button> }
-          </div>
-          <div style={Styles.CalendarContainer}>
-            <DayPicker
-              selectedDays={selectedDays}
-              showWeekNumbers
-              showOutsideDays
-              modifiers={modifiers}
-              onDayClick={this.handleDayChange}
-              onDayMouseEnter={this.handleDayEnter}
-              onDayMouseLeave={this.handleDayLeave}
-              onWeekClick={this.handleWeekClick}
-            />
-          </div>
-          { selectedDays.length > 0 &&
-            <FileUploader
-              ref={instance => { this.fileUploader = instance }}
-              onChange={event => this.setState({ timesheetFile: event.target.files[0], timesheetTimestamp: Date.now() })}
-              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" // only .xlsx
-              storageRef={firebase.storage().ref(`timesheets/${userState.id}`)}
-              filename={timesheetTimestamp}
-              onUploadStart={timesheetUploadStart}
-              onUploadError={timesheetUploadError}
-              onUploadSuccess={(filename, task) => {
-                this.clearFields()
-                return firebase.storage().ref(`timesheets/${userState.id}`).child(filename).getDownloadURL()
-                  .then(downloadUrl => {
-                    const timesheetTimePeriod = daysSelectedText
-                    const filepath = task.snapshot.metadata.fullPath
-                    const timestamp = task.snapshot.metadata.name.split('.')[0]
-                    const id = timestamp
-                    const userId = userState.id
-                    const action = {
-                      timesheetTimePeriod,
-                      filepath,
-                      id,
-                      userId,
-                      timestamp,
-                      downloadUrl
-                    }
-                    return saveToDatabase(action)
-                  })
-                  .catch(error => {
-                    timesheetUploadError(error)
-                  })
-              }}
-              onProgress={this.handleProgress}
-            />}
+        <div style={Styles.CalendarContainer}>
+          <DayPicker
+            selectedDays={selectedDays}
+            showWeekNumbers
+            showOutsideDays
+            modifiers={modifiers}
+            onDayClick={this.handleDayChange}
+            onDayMouseEnter={this.handleDayEnter}
+            onDayMouseLeave={this.handleDayLeave}
+            onWeekClick={this.handleWeekClick}
+          />
         </div>
+        { selectedDays.length > 0 &&
+          <FileUploader
+            ref={instance => { this.fileUploader = instance }}
+            onChange={event => this.setState({ timesheetFile: event.target.files[0], timesheetTimestamp: Date.now() })}
+            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" // only .xlsx
+            storageRef={firebase.storage().ref(`timesheets/${userState.id}`)}
+            filename={timesheetTimestamp}
+            onUploadStart={timesheetUploadStart}
+            onUploadError={timesheetUploadError}
+            onUploadSuccess={(filename, task) => {
+              this.clearFields()
+              return firebase.storage().ref(`timesheets/${userState.id}`).child(filename).getDownloadURL()
+                .then(downloadUrl => {
+                  const timesheetTimePeriod = daysSelectedText
+                  const filepath = task.snapshot.metadata.fullPath
+                  const timestamp = task.snapshot.metadata.name.split('.')[0]
+                  const id = timestamp
+                  const userId = userState.id
+                  const action = {
+                    timesheetTimePeriod,
+                    filepath,
+                    id,
+                    userId,
+                    timestamp,
+                    downloadUrl
+                  }
+                  return saveToDatabase(action)
+                })
+                .catch(error => {
+                  timesheetUploadError(error)
+                })
+            }}
+            onProgress={this.handleProgress}
+          />}
       </div>
     )
   }
-
-  renderAdminSidePanel() {
-    return (
-      <div style={Styles.adminSidePanel}>
-        {/* <button type="button" style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.HOME })}>Home</button> */}
-        <div style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.TIMESHEETS })}>View Timesheets</div>
-        <div style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.EMPLOYEES })}>View Employees</div>
-        <div style={Styles.adminSidePanelButton} onClick={() => this.setState({ currentAdminLayout: AdminLayouts.SETTINGS })}>Settings</div>
-      </div>
-    )
-  }
-
   // renderAdminHomeLayout() {
   //   return (
   //     <p>Home</p>
@@ -413,27 +471,194 @@ class DashboardLayout extends Component {
     )
   }
 
+  renderEmailEditting = () => {
+    return (
+      <div style={Styles.EmailContainer}>
+        <p>Email</p>
+        <div style={Styles.SettingsEmail}>
+          <input placeholder='Password' autoFocus onChange={(evt) => this.setState({ newEmailPassword: evt.target.value }) } />
+          <input placeholder='New Email' onChange={(evt) => this.setState({ newSettingEmail: evt.target.value }) } />
+        </div>
+        <div style={Styles.EditButtonContainer}>
+          <button type='submit' onClick={this.edittingEmailSubmit}>Submit</button>
+        </div>
+      </div>
+    )
+  }
+
+  renderPasswordEditting = (key) => {
+    return (
+      <div style={Styles.EmailContainer} key={key}>
+        <p>Password</p>
+        <div style={Styles.SettingsPassword}>
+          <input placeholder='Old Password' autoFocus onChange={(evt) => this.setState({ oldPassword: evt.target.value }) } />
+          <input placeholder='New Password' onChange={(evt) => this.setState({ newPassword: evt.target.value }) } />
+        </div>
+        <div style={Styles.EditButtonContainer}>
+          <button type='submit' onClick={this.edittingPasswordSubmit}>Submit</button>
+        </div>
+      </div>
+    )
+  }
+
+  renderNameEditting = (key) => {
+    return (
+      <div style={Styles.EmailContainer} key={key}>
+        <p>Name</p>
+        <div style={Styles.SettingsPassword}>
+          <input placeholder='New name' onChange={(evt) => this.setState({ newName: evt.target.value }) } />
+        </div>
+        <div style={Styles.EditButtonContainer}>
+          <button type='submit' onClick={this.edittingNameSubmit}>Submit</button>
+        </div>
+      </div>
+    )
+  }
+
+  renderAdminSetting(header, label, style) {
+    const { editting } = this.state
+    return (
+      <div>
+        { !(editting === header) && 
+          <div style={Styles.EmailContainer}>
+            <p>{header}</p>
+            <p style={style}>
+              {label}
+            </p>
+            <div style={Styles.EditButtonContainer}>
+            <img src={edit} style={Styles.EmailEditButton} alt="edit" 
+              onClick={() => this.setState({ editting: header, newSettingEmail: '', newEmailPassword: '', oldPassword: '', newPassword: '' }) } />
+            </div>
+          </div>
+        }
+        { editting === header && header === UserSetting.EMAIL && this.renderEmailEditting(header) }
+        { editting === header && header === UserSetting.PASSWORD && this.renderPasswordEditting(header) }
+        { editting === header && header === UserSetting.NAME && this.renderNameEditting(header) }
+
+      </div>
+    )
+  }
+
+  edittingNameSubmit = () => {
+    const { setSignUpError, fetchUserData } = this.props
+    const { newName } = this.state
+    const { uid } = firebase.auth().currentUser
+    
+    firebase.database().ref(`/users/${uid}/name`).set(newName).then(() => {
+      const action = {
+        payload: uid
+      }
+      fetchUserData(action)
+      this.setState({ editting: null })
+    }).catch((error) => {
+      const action = {
+        payload: 'Error setting new name, try again'
+      }
+      setSignUpError(action)
+    })
+
+  }
+
+  edittingEmailSubmit = () => {
+    const { fetchUserData, setSignUpError } = this.props
+    const { newEmailPassword, newSettingEmail } = this.state
+    const user = firebase.auth().currentUser
+    const credential = firebase.auth.EmailAuthProvider.credential(
+      user.email,
+      newEmailPassword
+    )
+    if (!validateEmail(newSettingEmail)) {
+      const action = {
+        payload: 'Invalid email'
+      }
+      return setSignUpError(action)
+    }
+    if (user.email === newSettingEmail) {
+      const action = {
+        payload: 'Must be a different email'
+      }
+      return setSignUpError(action)
+    }
+    user.reauthenticateWithCredential(credential).then(() => {
+      user.updateEmail(newSettingEmail).then(() => {
+        firebase.database().ref(`/users/${user.uid}/email`).set(newSettingEmail).then(() => {
+          // Update successful.
+          const action = {
+            payload: user.uid
+          }
+          fetchUserData(action)
+          this.setState({ editting: null })
+        }).catch((error) => {
+          console.log(error)
+          const action = {
+            payload: error.message
+          }
+          setSignUpError(action)
+        })
+      }).catch((error) => {
+        // An error happened.
+        console.log(error)
+        const action = {
+          payload: error.message
+        }
+        setSignUpError(action)
+
+      })
+    }).catch((error) => {
+      // An error happened.
+      console.log(error)
+      const action = {
+        payload: error.message
+      }
+      setSignUpError(action)
+    })
+  }
+
+  edittingPasswordSubmit = () => {
+    const { fetchUserData, setSignUpError } = this.props
+    const { oldPassword, newPassword } = this.state
+    const user = firebase.auth().currentUser
+    const credential = firebase.auth.EmailAuthProvider.credential(
+      user.email,
+      oldPassword
+    )
+    user.reauthenticateWithCredential(credential).then(() => {
+      user.updatePassword(newPassword).then(() => {
+        // Update successful.
+        const action = {
+          payload: "Successfully changed your password"
+        }
+        this.setState({ editting: null })
+        setSignUpError(action)
+
+      }).catch((error) => {
+        // An error happened.
+        console.log(error)
+        const action = {
+          payload: error.message
+        }
+        setSignUpError(action)
+
+      })
+    }).catch((error) => {
+      // An error happened.
+      console.log(error)
+      const action = {
+        payload: error.message
+      }
+      setSignUpError(action)
+    })
+  }
+
   renderAdminSettingsLayout() {
     const { userState } = this.props
-    const { email } = userState
+    const { email, name } = userState
 
     return (
       <div style={Styles.SettingsLayoutContainer}>
-        <div style={Styles.EmailContainer}>
-          <p>Email</p>
-          <p style={Styles.SettingsEmail}>
-            {email}
-          </p>
-          <div>
-
-          </div>
-        </div>
-        <div style={Styles.EmailContainer}>
-          <p>Password</p>
-          <p style={Styles.SettingsPassword}>
-            **********
-          </p>
-        </div>
+        { this.renderAdminSetting(UserSetting.EMAIL, email, Styles.SettingsEmail) }
+        { this.renderAdminSetting(UserSetting.PASSWORD, "**********", Styles.SettingsPassword) }
+        { this.renderAdminSetting(UserSetting.NAME, name, Styles.SettingsName) }
       </div>
     )
   }
@@ -526,7 +751,7 @@ class DashboardLayout extends Component {
     const { isAdmin } = this.props
     if (!isAdmin) {
       return (
-        this.renderSubmitLayout()
+        this.renderEmployeeLayout()
       )
     }
     if (isAdmin) {
@@ -551,6 +776,7 @@ DashboardLayout.propTypes = {
   timesheetUploadError: PropTypes.func.isRequired,
   timesheetUploadStart: PropTypes.func.isRequired,
   timesheetUploading: PropTypes.bool.isRequired,
+  fetchUserData: PropTypes.func.isRequired
 }
 
 export default DashboardLayout

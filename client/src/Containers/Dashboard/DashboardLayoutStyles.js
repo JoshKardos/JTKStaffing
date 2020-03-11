@@ -16,10 +16,19 @@ export default {
   CommonBorder: {
     border: CommonBorder
   },
+  EmailEditButton: {
+    width: '20px',
+    height: '20px',
+    cursor: 'pointer'
+  },
+  EditButtonContainer: {
+    marginLeft: '60px'
+  },
   SettingsLayoutContainer: {
     margin: '0 auto',
     marginLeft: '40px',
     marginRight: '40px',
+    paddingBottom: '12px',
     width: '100%',
     fontSize: '14px'
   },
@@ -29,7 +38,13 @@ export default {
   },
   SettingsEmail: {
     width: '100px',
-    marginLeft: '115px'
+    marginLeft: '115px',
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  SettingsName: {
+    width: '100px',
+    marginLeft: '112px'
   },
   EmailContainer: {
     display: 'flex',
@@ -108,7 +123,7 @@ export default {
   },
   timesheetTileTableBody: {
     display: 'block',
-    height: '100px',
+    height: '150px',
     overflow: 'auto'
   },
   timesheetTileTableBodyHead: {
@@ -145,7 +160,7 @@ export default {
     marginTop: '28px',
     padding: '0',
     overflowY: 'scroll',
-    height: '100%',
+    maxHeight: '70vh',
     margin: '12px'
   },
   timesheetHeader: {
@@ -218,9 +233,7 @@ export default {
     backgroundColor: 'lightGray'
   },
   RecentlySubmittedContainer: {
-    maxWidth: '260px',
-    minWidth: '260px',
-    maxHeight: '460px'
+    width: '80%'
   },
   SubmitContainer: {
     display: 'flex',
