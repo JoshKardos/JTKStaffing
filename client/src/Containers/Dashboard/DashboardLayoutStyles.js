@@ -149,6 +149,41 @@ export default {
   downloadLink: {
     fontWeight: 'bold'
   },
+  AddEmployeeNameContainer: {
+    width: '100%',
+    marginBottom: '6px'
+  },
+  AddEmployeeNameLabel: {
+    marginLeft: '6px' 
+  },
+  AddEmployeeNameInput: {
+    position: 'relative',
+    width: '180px',
+    marginLeft: '30px'
+  },
+  AddEmployeeEmailContainer: {
+    width: '100%'
+  },
+  AddEmployeeEmailLabel: {
+    marginLeft: '6px'
+  },
+  AddEmployeeEmailInput: {
+    position: 'relative',
+    width: '180px',
+    marginLeft: '34px'
+  },
+  AddEmployeePasswordContainer: {
+    marginTop: '6px',
+    width: '100%'
+  },
+  AddEmployeePasswordLabel: {
+    marginLeft: '6px'
+  },
+  AddEmployeePasswordInput: {
+    position: 'relative',
+    width: '180px',
+    marginLeft: '4px'
+  },
   recentTimesheet: {
     paddingBottom: '16px',
     textAlign: 'center',

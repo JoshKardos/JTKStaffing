@@ -426,17 +426,17 @@ class DashboardLayout extends Component {
     return (
       <div>
         <form onSubmit={this.handleSubmit} style={Styles.addEmployeeContainer}>
-          <div className="NameContainer">
-            <label className="NameLabel">Name:</label>
-            <input className="NameInput" type="text" value={name} onChange={this.handleNameChange} />
+          <div style={Styles.AddEmployeeNameContainer}>
+            <label style={Styles.AddEmployeeNameLabel}>Name:</label>
+            <input style={Styles.AddEmployeeNameInput} type="text" value={name} onChange={this.handleNameChange} />
           </div>
-          <div className="EmailContainer">
-            <label className="EmailLabel">Email:</label>
-            <input className="EmailInput" type="text" value={email} onChange={this.handleEmailChange} />
+          <div style={Styles.AddEmployeeEmailContainer}>
+            <label style={Styles.AddEmployeeEmailLabel}>Email:</label>
+            <input style={Styles.AddEmployeeEmailInput} type="text" value={email} onChange={this.handleEmailChange} />
           </div>
-          <div className="PasswordContainer">
-            <label className="PasswordLabel">Password:</label>
-            <input className="PasswordInput" value={password} onChange={this.handlePassChange} />
+          <div style={Styles.AddEmployeePasswordContainer}>
+            <label style={Styles.AddEmployeePasswordLabel}>Password:</label>
+            <input style={Styles.AddEmployeePasswordInput} value={password} onChange={this.handlePassChange} />
           </div>
           <button style={Styles.submitButton} type="submit">
             { !isLoading && <p>Sign Up</p> }
