@@ -16,6 +16,44 @@ export default {
   CommonBorder: {
     border: CommonBorder
   },
+  FileUploaderTooltip: {
+    marginTop: '-40px',
+    marginLeft: '-20px'
+  },
+  fileUploader: {
+    marginTop: '40px',
+    display: 'inline'
+  },
+  dayPickerTooltip: {
+    marginTop: '0px',
+    marginLeft: '-10px'
+  },
+  SubmitHeader: {
+    display: 'inline'
+  },
+  EmployeeSubmitHeaderTooltip: {
+    marginTop: '-45px',
+    marginLeft: '90px'
+  },
+  addEmployeeButtonContainer: {
+    marginTop: '12px',
+    display: 'inline'
+  },
+  addEmployeeButton: {
+    textAlign: 'center',
+    fontSize: '14px',
+    cursor: 'pointer',
+    width: '100px',
+    borderRadius: '8px',
+    padding: '1px',
+    backgroundColor: 'white'
+  },
+  addEmployeeButtonTooltip: {
+    marginTop: '-66px',
+    marginLeft: '92px',
+    zIndex: '1',
+    cursor: 'pointer'
+  },
   EmailEditButton: {
     width: '20px',
     height: '20px',
@@ -53,6 +91,7 @@ export default {
     borderBottom: '2px solid white'
   },
   addEmployeeContainer: {
+    marginTop: '32px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -224,10 +263,6 @@ export default {
     paddingBottom: '6px',
     cursor: 'pointer'
   },
-  addEmployeeButton: {
-    width: '100px',
-    marginBottom: '12px'
-  },
   employeesTableContainer: {
     marginTop: '90px',
     width: '80%',
@@ -241,7 +276,6 @@ export default {
     border: CommonBorder,
     textAlign: 'left',
     marginLeft: '24px',
-    marginBottom: '14px'
   },
   whiteBackground : {
     backgroundColor: 'white'
@@ -257,7 +291,7 @@ export default {
     margin: '0 auto',
     marginLeft: '12px',
     width: '100%',
-    paddingBottom: '8px'
+    paddingBottom: '32px'
   },
   DasboardContainer: {
     marginLeft: '26px',
@@ -276,7 +310,7 @@ export default {
     flexDirection: 'column',
     alignItems: 'center',
     backgroundColor: 'lightgrey',
-    paddingBottom: '120px',
+    paddingBottom: '100px',
     minHeight: '400px',
     width: '100%'
   },
@@ -307,11 +341,16 @@ export default {
     flexDirection: 'column',
     alignItems: 'center',
   },
-  CalendarContainer: {
+  Calendar: {
+    marginTop: '-20px',
     backgroundColor: 'white',
     padding: '12px',
     borderRadius: '12px',
     marginBottom: '10px',
+  },
+  CalendarContainer: {
+    display: 'inline',
+    marginTop: '10px'
   },
   StepRow: {
     display: 'flex',

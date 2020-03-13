@@ -1,0 +1,28 @@
+.blob {
+	background: black;
+	border-radius: 50%;
+	margin: 10px;
+	height: 20px;
+	width: 20px;
+
+	box-shadow: 0 0 0 0 #3b5998;
+	transform: scale(1);
+	animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 #4b69aa;
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px #667eaf;
+	}
+
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 #8d97ac;
+	}
+}

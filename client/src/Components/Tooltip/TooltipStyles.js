@@ -1,10 +1,17 @@
 const Styles = {
-  container: {
-    paddingLeft: '2px',
-    paddingRight: '2px',
+  icon: {
+    backgroundColor: '#3b5998',
+    color: 'white',
+    fontWeight: 'bold',
+    width: '20px',
+    height: '20px',
+    textAlign: 'center',
+    borderRadius: '10px',
+  },
+  window: {
     backgroundColor: 'white',
-    border: '2px solid #000000',
-    borderRadius: '4px'
+    border: '1px solid black',
+    textAlign: 'center'
   }
 }
 

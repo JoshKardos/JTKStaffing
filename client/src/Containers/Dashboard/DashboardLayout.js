@@ -22,6 +22,7 @@ import greenCheck from '../../Images/greenCheck.jpg'
 import Styles from './DashboardLayoutStyles'
 import { validateEmail } from '../../helpers/UserHelpers'
 import edit from '../../Images/edit.png'
+import Tooltip, { TooltipItems } from '../../Components/Tooltip/Tooltip'
 
 const AdminLayouts = {
   // HOME: 'HOME',
@@ -53,7 +54,7 @@ class DashboardLayout extends Component {
       selectedDays: [],
 
       currentEmployeeLayout: EmployeeLayouts.SUBMIT,
-      currentAdminLayout: AdminLayouts.SETTINGS,
+      currentAdminLayout: AdminLayouts.EMPLOYEES,
 
       // Add employee state
       shouldShowAddEmployee: false,
@@ -72,7 +73,13 @@ class DashboardLayout extends Component {
       newSettingEmail: '',
       newEmailPassword: '',
       oldPassword: '',
-      newPassword: ''
+      newPassword: '',
+      
+      // tooltips
+      shouldShowAddEmployeeToolTip: !(localStorage.getItem(TooltipItems.AddEmployee)),
+      shouldShowSubmitTimesheetTooltip: !(localStorage.getItem(TooltipItems.SubmitTimesheet)),
+      shouldShowDayPickerTooltip: !(localStorage.getItem(TooltipItems.DayPicker)),
+      shouldFileUploaderTooltip: !(localStorage.getItem(TooltipItems.FileUploader))
     }
     this.fileUploader = null
   }
@@ -324,7 +331,7 @@ class DashboardLayout extends Component {
 
   renderEmployeeSubmitLayout = () => {
     const { userState, saveToDatabase, timesheetUploadError, timesheetUploadStart, timesheetUploading } = this.props
-    const { timesheetFile, hoverRange, selectedDays, timesheetTimestamp } = this.state
+    const { timesheetFile, hoverRange, selectedDays, timesheetTimestamp, shouldShowDayPickerTooltip, shouldFileUploaderTooltip, shouldShowSubmitTimesheetTooltip } = this.state
 
     const daysAreSelected = selectedDays.length > 0;
     const daysSelectedText = `${moment(selectedDays[0]).format('LL')} – ${moment(selectedDays[6]).format('LL')}`
@@ -341,7 +348,13 @@ class DashboardLayout extends Component {
     }
     return (
       <div style={Styles.SubmitContainer}>
-        <h2>Submit</h2>
+        <div style={Styles.SubmitHeader}>
+          <h2>Submit</h2>
+          { 
+            shouldShowSubmitTimesheetTooltip &&
+              <Tooltip hideTooltip={() => this.setState({ shouldShowSubmitTimesheetTooltip: false })} containerStyle={Styles.EmployeeSubmitHeaderTooltip} itemName={TooltipItems.SubmitTimesheet} text='Select your time period and excel file then press submit' />
+          }
+        </div>
         <div style={Styles.StepsList}>
           {/* FIRST STEP */ }
           {this.renderFirstStep(daysAreSelected, daysSelectedText)}
@@ -355,51 +368,65 @@ class DashboardLayout extends Component {
             </button> }
         </div>
         <div style={Styles.CalendarContainer}>
-          <DayPicker
-            selectedDays={selectedDays}
-            showWeekNumbers
-            showOutsideDays
-            modifiers={modifiers}
-            onDayClick={this.handleDayChange}
-            onDayMouseEnter={this.handleDayEnter}
-            onDayMouseLeave={this.handleDayLeave}
-            onWeekClick={this.handleWeekClick}
-          />
+        { 
+            shouldShowDayPickerTooltip &&
+              <Tooltip hideTooltip={() => this.setState({ shouldShowDayPickerTooltip: false })} containerStyle={Styles.dayPickerTooltip} itemName={TooltipItems.DayPicker} text='Select the work week of your timesheet'/>
+          }
+          <div style={Styles.Calendar}>
+            <DayPicker
+              selectedDays={selectedDays}
+              showWeekNumbers
+              showOutsideDays
+              modifiers={modifiers}
+              onDayClick={this.handleDayChange}
+              onDayMouseEnter={this.handleDayEnter}
+              onDayMouseLeave={this.handleDayLeave}
+              onWeekClick={this.handleWeekClick}
+            />
+          </div>
         </div>
+        
         { selectedDays.length > 0 &&
-          <FileUploader
-            ref={instance => { this.fileUploader = instance }}
-            onChange={event => this.setState({ timesheetFile: event.target.files[0], timesheetTimestamp: Date.now() })}
-            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" // only .xlsx
-            storageRef={firebase.storage().ref(`timesheets/${userState.id}`)}
-            filename={timesheetTimestamp}
-            onUploadStart={timesheetUploadStart}
-            onUploadError={timesheetUploadError}
-            onUploadSuccess={(filename, task) => {
-              this.clearFields()
-              return firebase.storage().ref(`timesheets/${userState.id}`).child(filename).getDownloadURL()
-                .then(downloadUrl => {
-                  const timesheetTimePeriod = daysSelectedText
-                  const filepath = task.snapshot.metadata.fullPath
-                  const timestamp = task.snapshot.metadata.name.split('.')[0]
-                  const id = timestamp
-                  const userId = userState.id
-                  const action = {
-                    timesheetTimePeriod,
-                    filepath,
-                    id,
-                    userId,
-                    timestamp,
-                    downloadUrl
-                  }
-                  return saveToDatabase(action)
-                })
-                .catch(error => {
-                  timesheetUploadError(error)
-                })
-            }}
-            onProgress={this.handleProgress}
-          />}
+          <div style={Styles.fileUploader}>
+            <FileUploader
+              ref={instance => { this.fileUploader = instance }}
+              onChange={event => this.setState({ timesheetFile: event.target.files[0], timesheetTimestamp: Date.now() })}
+              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" // only .xlsx
+              storageRef={firebase.storage().ref(`timesheets/${userState.id}`)}
+              filename={timesheetTimestamp}
+              onUploadStart={timesheetUploadStart}
+              onUploadError={timesheetUploadError}
+              onUploadSuccess={(filename, task) => {
+                this.clearFields()
+                return firebase.storage().ref(`timesheets/${userState.id}`).child(filename).getDownloadURL()
+                  .then(downloadUrl => {
+                    const timesheetTimePeriod = daysSelectedText
+                    const filepath = task.snapshot.metadata.fullPath
+                    const timestamp = task.snapshot.metadata.name.split('.')[0]
+                    const id = timestamp
+                    const userId = userState.id
+                    const action = {
+                      timesheetTimePeriod,
+                      filepath,
+                      id,
+                      userId,
+                      timestamp,
+                      downloadUrl
+                    }
+                    return saveToDatabase(action)
+                  })
+                  .catch(error => {
+                    timesheetUploadError(error)
+                  })
+              }}
+              onProgress={this.handleProgress}
+            />
+            { 
+              shouldFileUploaderTooltip &&
+                <Tooltip hideTooltip={() => this.setState({ shouldFileUploaderTooltip: false })} containerStyle={Styles.FileUploaderTooltip} text='hello' itemName={TooltipItems.FileUploader} />
+            }
+          </div>
+        }
       </div>
     )
   }
@@ -424,31 +451,29 @@ class DashboardLayout extends Component {
     const { isLoading } = this.props
     const { email, password, name } = this.state
     return (
-      <div>
-        <form onSubmit={this.handleSubmit} style={Styles.addEmployeeContainer}>
-          <div style={Styles.AddEmployeeNameContainer}>
-            <label style={Styles.AddEmployeeNameLabel}>Name:</label>
-            <input style={Styles.AddEmployeeNameInput} type="text" value={name} onChange={this.handleNameChange} />
-          </div>
-          <div style={Styles.AddEmployeeEmailContainer}>
-            <label style={Styles.AddEmployeeEmailLabel}>Email:</label>
-            <input style={Styles.AddEmployeeEmailInput} type="text" value={email} onChange={this.handleEmailChange} />
-          </div>
-          <div style={Styles.AddEmployeePasswordContainer}>
-            <label style={Styles.AddEmployeePasswordLabel}>Password:</label>
-            <input style={Styles.AddEmployeePasswordInput} value={password} onChange={this.handlePassChange} />
-          </div>
-          <button style={Styles.submitButton} type="submit">
-            { !isLoading && <p>Sign Up</p> }
-            { isLoading && <Loader type="ThreeDots" color="#00BFFF" height={40} width={80} /> }
-          </button>
-        </form>
-      </div>
+      <form onSubmit={this.handleSubmit} style={Styles.addEmployeeContainer}>
+        <div style={Styles.AddEmployeeNameContainer}>
+          <label style={Styles.AddEmployeeNameLabel}>Name:</label>
+          <input style={Styles.AddEmployeeNameInput} type="text" value={name} onChange={this.handleNameChange} />
+        </div>
+        <div style={Styles.AddEmployeeEmailContainer}>
+          <label style={Styles.AddEmployeeEmailLabel}>Email:</label>
+          <input style={Styles.AddEmployeeEmailInput} type="text" value={email} onChange={this.handleEmailChange} />
+        </div>
+        <div style={Styles.AddEmployeePasswordContainer}>
+          <label style={Styles.AddEmployeePasswordLabel}>Password:</label>
+          <input style={Styles.AddEmployeePasswordInput} value={password} onChange={this.handlePassChange} />
+        </div>
+        <button style={Styles.submitButton} type="submit">
+          { !isLoading && <p>Sign Up</p> }
+          { isLoading && <Loader type="ThreeDots" color="#00BFFF" height={40} width={80} /> }
+        </button>
+      </form>
     )
   }
 
   renderAdminEmployeesLayout() {
-    const { shouldShowAddEmployee } = this.state
+    const { shouldShowAddEmployee, shouldShowAddEmployeeToolTip } = this.state
     return (
       <div style={Styles.adminEmployeesLayoutContainer}>
         <p style={Styles.timesheetHeader}>Employees</p>
@@ -464,7 +489,15 @@ class DashboardLayout extends Component {
               {this.renderAdminEmployeesTableData()}
             </tbody>
           </table>
-          <button style={Styles.addEmployeeButton} type="button" onClick={() => this.addEmployeeClicked()}>Add Employee</button>
+          <div style={Styles.addEmployeeButtonContainer}>
+            <div style={Styles.addEmployeeButton} onClick={() => this.addEmployeeClicked()}>
+              <p>Add Employee</p>
+            </div>
+            { 
+              shouldShowAddEmployeeToolTip && 
+                <Tooltip hideTooltip={() => this.setState({ shouldShowAddEmployeeToolTip: false })} containerStyle={Styles.addEmployeeButtonTooltip} itemName={TooltipItems.AddEmployee} text='Click here to add employees from your company'/>
+            }
+          </div>
           { shouldShowAddEmployee && this.renderAddEmployeeLayout() }
         </div>
       </div>
@@ -653,7 +686,6 @@ class DashboardLayout extends Component {
   renderAdminSettingsLayout() {
     const { userState } = this.props
     const { email, name } = userState
-
     return (
       <div style={Styles.SettingsLayoutContainer}>
         { this.renderAdminSetting(UserSetting.EMAIL, email, Styles.SettingsEmail) }

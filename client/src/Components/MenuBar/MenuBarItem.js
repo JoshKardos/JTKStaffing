@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import './Styles/MenuBarItemStyles.css';
+import Styles from './Styles/MenuBarItemStyles.js';
 
 class MenuBarItem extends Component {
   render() {
     const { label, onClick } = this.props
     return (
-      <div className="Button" onClick={onClick} role="button">
-        <p className="Label">{label}</p>
+      <div style={Styles.Button} onClick={onClick} role="button">
+        <p style={Styles.Label}>{label}</p>
       </div>
     )
   }
