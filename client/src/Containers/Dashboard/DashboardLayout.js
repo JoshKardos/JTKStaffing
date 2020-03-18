@@ -3,13 +3,6 @@ import PropTypes from 'prop-types'
 import moment from 'moment'
 import FileUploader from 'react-firebase-file-uploader'
 import Generator from 'generate-password'
-// import Calendar from 'react-calendar' // https://www.npmjs.com/package/react-calendar
-// import DatePicker from 'react-datepicker'; // https://www.npmjs.com/package/react-datepicker
-// import 'react-datepicker/dist/react-datepicker.css';
-// import ReactDataSheet from 'react-datasheet';
-// // Be sure to include styles at some point, probably during your bootstrapping
-// import 'react-datasheet/lib/react-datasheet.css'; // https://github.com/nadbm/react-datasheet
-// import { FilePicker } from 'react-file-picker'
 import DayPicker from 'react-day-picker' // https://react-day-picker.js.org/examples/selected-week
 import Loader from 'react-loader-spinner'
 import firebase from '../../Firebase/index'
@@ -23,6 +16,7 @@ import Styles from './DashboardLayoutStyles'
 import { validateEmail } from '../../helpers/UserHelpers'
 import edit from '../../Images/edit.png'
 import Tooltip, { TooltipItems } from '../../Components/Tooltip/Tooltip'
+import AdminEmployeeCell from './Admin/AdminEmployeeCell'
 
 const AdminLayouts = {
   // HOME: 'HOME',
@@ -440,10 +434,7 @@ class DashboardLayout extends Component {
     const { employees } = this.props
     if (!employees) return null
     return employees.map((employee, index) => (
-      <tr style={index % 2 == 1 ? Styles.whiteBackground : null} key={employee.uid}>
-        <td>{employee.email}</td>
-        <td>{employee.name}</td>
-      </tr>
+      <AdminEmployeeCell employee={employee} index={index} />
     ))
   }
 

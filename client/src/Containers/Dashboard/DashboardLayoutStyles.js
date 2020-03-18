@@ -277,6 +277,9 @@ export default {
     textAlign: 'left',
     marginLeft: '24px',
   },
+  darkGrayBackground: {
+    backgroundColor: 'darkgrey'
+  },
   whiteBackground : {
     backgroundColor: 'white'
   },
