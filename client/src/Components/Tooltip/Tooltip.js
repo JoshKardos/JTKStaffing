@@ -15,7 +15,7 @@ class Tooltip extends Component {
   }
 
   render() {
-    const { text, containerStyle } = this.props
+    const { containerStyle } = this.props
     return (
       <div>
         <div className="blob" style={Object.assign({}, containerStyle, Styles.icon)} onClick={this.iconClicked} >
@@ -39,7 +39,7 @@ export const TooltipItems = {
   FileUploader: 'FileUploader'
 }
 
-export const removeTooltipStorage = () => {
+export const removeTooltipStorage = () => { // removes all tool tip data, never call unless testing
   localStorage.removeItem(TooltipItems.AddEmployee)
   localStorage.removeItem(TooltipItems.SubmitTimesheet)
   localStorage.removeItem(TooltipItems.DayPicker)

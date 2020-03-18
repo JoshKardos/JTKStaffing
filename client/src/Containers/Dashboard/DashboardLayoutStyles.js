@@ -260,8 +260,7 @@ export default {
     cursor: 'pointer',
     backgroundColor: 'lightgrey',
     borderBottom: '1px solid grey',
-    paddingBottom: '6px',
-    cursor: 'pointer'
+    paddingBottom: '6px'
   },
   employeesTableContainer: {
     marginTop: '90px',
@@ -276,6 +275,9 @@ export default {
     border: CommonBorder,
     textAlign: 'left',
     marginLeft: '24px',
+  },
+  darkGrayBackground: {
+    backgroundColor: 'darkgrey'
   },
   whiteBackground : {
     backgroundColor: 'white'
