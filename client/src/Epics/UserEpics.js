@@ -1,6 +1,6 @@
 import { ofType } from 'redux-observable'
 import { switchMap, mapTo, map, filter } from 'rxjs/operators';
-import { TYPES as UserTypes, userLoggedIn } from '../Redux/UserRedux'
+import { TYPES as UserTypes } from '../Redux/UserRedux'
 import { TYPES as ErrorTypes } from '../Redux/ErrorRedux'
 import { TYPES as LayoutTypes, LAYOUTS } from '../Redux/LayoutRedux'
 import firebase from '../Firebase/index'

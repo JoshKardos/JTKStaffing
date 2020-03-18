@@ -15,7 +15,7 @@ class Tooltip extends Component {
   }
 
   render() {
-    const { text, containerStyle } = this.props
+    const { containerStyle } = this.props
     return (
       <div>
         <div className="blob" style={Object.assign({}, containerStyle, Styles.icon)} onClick={this.iconClicked} >

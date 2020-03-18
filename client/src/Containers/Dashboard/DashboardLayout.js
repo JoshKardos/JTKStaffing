@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 import FileUploader from 'react-firebase-file-uploader'
@@ -17,6 +18,9 @@ import { validateEmail } from '../../helpers/UserHelpers'
 import edit from '../../Images/edit.png'
 import Tooltip, { TooltipItems } from '../../Components/Tooltip/Tooltip'
 import AdminEmployeeCell from './Admin/AdminEmployeeCell'
+import { signUpWorker, signUpAdmin, setSignUpError, fetchUserData, login, setLoginError, adminLoggedIn } from '../../Redux/UserRedux'
+import { uploadTimesheet, setTimesheetFileError, timesheetUploadError, saveToDatabase, timesheetUploadStart } from '../../Redux/DashboardRedux'
+import { resetError } from '../../Redux/ErrorRedux'
 
 const AdminLayouts = {
   // HOME: 'HOME',
@@ -639,7 +643,7 @@ class DashboardLayout extends Component {
   }
 
   edittingPasswordSubmit = () => {
-    const { fetchUserData, setSignUpError } = this.props
+    const { setSignUpError } = this.props
     const { oldPassword, newPassword } = this.state
     const user = firebase.auth().currentUser
     const credential = firebase.auth.EmailAuthProvider.credential(
@@ -771,7 +775,8 @@ class DashboardLayout extends Component {
   }
 
   render() {
-    const { isAdmin } = this.props
+    const { userState } = this.props
+    const isAdmin = adminLoggedIn(userState)
     if (!isAdmin) {
       return (
         this.renderEmployeeLayout()
@@ -802,4 +807,30 @@ DashboardLayout.propTypes = {
   fetchUserData: PropTypes.func.isRequired
 }
 
-export default DashboardLayout
+const mapStateToProps = state => ({
+  recentlySubmittedTimesheets: state.UserReducers.userReducer.timesheets,
+  employees: state.UserReducers.userReducer.employees,
+  userState: state.UserReducers.userReducer,
+  currentLayout: state.LayoutReducers.layoutReducer.currentLayout,
+  isLoading: state.UserReducers.userReducer.loginLoading,
+  signUpLoading: state.UserReducers.userReducer.signUpLoading,
+  errorDescription: state.ErrorReducers.errorReducer.errorDescription,
+  timesheetUploading: state.DashboardReducers.dashboardReducer.uploading
+})
+
+const mapDispatchToProps = dispatch => ({
+  login: (email, password) => dispatch(login(email, password)),
+  signUpAdmin: (name, email, password, company) => dispatch(signUpAdmin(name, email, password, company)),
+  signUpWorker: (name, email, password) => dispatch(signUpWorker(name, email, password)),
+  setSignUpError: (error) => dispatch(setSignUpError(error)),
+  setLoginError: (error) => dispatch(setLoginError(error)),
+  setTimesheetFileError: (error) => dispatch(setTimesheetFileError(error)),
+  resetError: () => dispatch(resetError()),
+  fetchUserData: (userId) => dispatch(fetchUserData(userId)),
+  uploadTimesheet: (file) => dispatch(uploadTimesheet(file)),
+  saveToDatabase: (timesheetTimePeriod, filepath, id, userId, timestamp) => dispatch(saveToDatabase(timesheetTimePeriod, filepath, id, userId, timestamp)),
+  timesheetUploadError: () => dispatch(timesheetUploadError()),
+  timesheetUploadStart: () => dispatch(timesheetUploadStart())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(DashboardLayout)

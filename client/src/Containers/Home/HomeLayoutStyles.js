@@ -8,7 +8,6 @@ export default {
   InnerHomeContainer: {
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: 'white',
     borderRadius: '4px',
     width: '100%',
     marginLeft: '30px',

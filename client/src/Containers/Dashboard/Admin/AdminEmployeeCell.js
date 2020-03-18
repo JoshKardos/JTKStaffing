@@ -13,7 +13,7 @@ class AdminEmployeeCell extends Component {
   render() {
     const { employee, index, onClick } = this.props
     const { hover } = this.state
-    const oddStyle = index % 2 == 1 ? Styles.whiteBackground : null
+    const oddStyle = index % 2 === 1 ? Styles.whiteBackground : null
     const hoveredStyle = hover ? Styles.darkGrayBackground : null
     const cellStyle = {...oddStyle, ...hoveredStyle}
     return (

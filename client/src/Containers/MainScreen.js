@@ -9,7 +9,7 @@ import SignUpLayout from './SignUp/SignUpLayout'
 import DashboardLayout from './Dashboard/DashboardLayout'
 import HomeLayout from './Home/HomeLayout'
 import { uploadTimesheet, setTimesheetFileError, timesheetUploadError, saveToDatabase, timesheetUploadStart } from '../Redux/DashboardRedux'
-import { signUpWorker, signUpAdmin, setSignUpError, fetchUserData, login, setLoginError, userLoggedIn, adminLoggedIn } from '../Redux/UserRedux'
+import { signUpWorker, signUpAdmin, setSignUpError, fetchUserData, login, setLoginError, userLoggedIn } from '../Redux/UserRedux'
 import { resetError } from '../Redux/ErrorRedux'
 import GenericErrorModal from './GenericErrorModal'
 import Styles from './MainScreenStyles.js'
@@ -30,10 +30,8 @@ class MainScreen extends Component {
   }
 
   render() {
-    const { fetchUserData, currentLayout, signUpAdmin, errorDescription, resetError, signUpLoading,
-      setSignUpError, login, loginLoading, setLoginError, userState, setTimesheetFileError,
-      uploadTimesheet, timesheetUploadStart, timesheetUploadError, saveToDatabase, timesheetUploading,
-      employees, signUpWorker, timesheets
+    const { currentLayout, signUpAdmin, errorDescription, resetError, signUpLoading,
+      setSignUpError, login, loginLoading, setLoginError, userState
     } = this.props
     const loggedIn = userLoggedIn(userState)
 
@@ -43,7 +41,7 @@ class MainScreen extends Component {
         { errorDescription ?
           <GenericErrorModal errorDescription={errorDescription} resetError={resetError} /> : null }
         { !loggedIn && currentLayout === LAYOUTS.HOME && <HomeLayout /> }
-        { loggedIn && currentLayout === LAYOUTS.HOME && <DashboardLayout fetchUserData={fetchUserData} recentlySubmittedTimesheets={timesheets} isLoading={loginLoading} setSignUpError={setSignUpError} signUpWorker={signUpWorker} setTimesheetFileError={setTimesheetFileError} isAdmin={adminLoggedIn(userState)} uploadTimesheet={uploadTimesheet} userState={userState} timesheetUploadStart={timesheetUploadStart} timesheetUploadError={timesheetUploadError} saveToDatabase={saveToDatabase} timesheetUploading={timesheetUploading} employees={employees} /> }
+        { loggedIn && currentLayout === LAYOUTS.HOME && <DashboardLayout /> }
         { currentLayout === LAYOUTS.LOGIN && <LoginLayout login={login} isLoading={loginLoading} setLoginError={setLoginError} /> }
         { currentLayout === LAYOUTS.SIGNUP && <SignUpLayout signUpAdmin={signUpAdmin} isLoading={signUpLoading} setSignUpError={setSignUpError} /> }
       </div>
