@@ -271,16 +271,52 @@ export default {
   },
   employeesTable: {
     width: '100%',
-    cursor: 'pointer',
     border: CommonBorder,
     textAlign: 'left',
     marginLeft: '24px',
+  },
+  heightForty: {
+    height: '40px'
   },
   darkGrayBackground: {
     backgroundColor: 'darkgrey'
   },
   whiteBackground : {
     backgroundColor: 'white'
+  },
+  AdminEmployeeCellFlex: {
+    height: '40px',
+    marginRight: '6px',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  AdminEmployeeCellButtons: {
+    width: '130px',
+    justifyContent: 'space-between',
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  AdminEmployeeCellEditButton: {
+    backgroundColor: 'blue',
+    textAlign: 'center',
+    color: 'white',
+    width: '52px',
+    borderRadius: '6px',
+    paddingTop: '2px',
+    paddingBottom: '2px',
+    cursor: 'pointer'
+  },
+  AdminEmployeeCellDeleteButton: {
+    backgroundColor: 'red',
+    textAlign: 'center',
+    color: 'white',
+    width: '60px',
+    borderRadius: '6px',
+    paddingTop: '2px',
+    paddingBottom: '2px',
+    cursor: 'pointer'
   },
   employeesTableCell: {
     borderBottom: CommonBorder,

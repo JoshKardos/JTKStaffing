@@ -428,22 +428,20 @@ class DashboardLayout extends Component {
       </div>
     )
   }
-  // renderAdminHomeLayout() {
-  //   return (
-  //     <p>Home</p>
-  //   )
-  // }
+  employeeCellClicked = (employee) => {
+    console.log("okY PRESSED")
+  }
 
   renderAdminEmployeesTableData() {
-    const { employees } = this.props
+    const { employees, setSignUpError, fetchUserData } = this.props
     if (!employees) return null
     return employees.map((employee, index) => (
-      <AdminEmployeeCell employee={employee} index={index} />
+      <AdminEmployeeCell employee={employee} index={index} onClick={this.employeeCellClicked} setSignUpError={setSignUpError} fetchUserData={fetchUserData} />
     ))
   }
 
   renderAddEmployeeLayout() {
-    const { isLoading } = this.props
+    const { signUpLoading } = this.props
     const { email, password, name } = this.state
     return (
       <form onSubmit={this.handleSubmit} style={Styles.addEmployeeContainer}>
@@ -460,8 +458,8 @@ class DashboardLayout extends Component {
           <input style={Styles.AddEmployeePasswordInput} value={password} onChange={this.handlePassChange} />
         </div>
         <button style={Styles.submitButton} type="submit">
-          { !isLoading && <p>Sign Up</p> }
-          { isLoading && <Loader type="ThreeDots" color="#00BFFF" height={40} width={80} /> }
+          { !signUpLoading && <p>Sign Up</p> }
+          { signUpLoading && <Loader type="ThreeDots" color="#00BFFF" height={40} width={80} /> }
         </button>
       </form>
     )
@@ -476,8 +474,8 @@ class DashboardLayout extends Component {
           <table style={Styles.employeesTable}>
             <thead>
               <tr>
-                <td style={Styles.employeesTableCell}>Email address</td>
-                <td style={Styles.employeesTableCell}>Name</td>
+                <th style={Styles.employeesTableCell}>Email address</th>
+                <th style={Styles.employeesTableCell}>Name</th>
               </tr>
             </thead>
             <tbody>
@@ -793,7 +791,7 @@ class DashboardLayout extends Component {
 
 DashboardLayout.propTypes = {
   recentlySubmittedTimesheets: PropTypes.array.isRequired,
-  isLoading: PropTypes.bool.isRequired,
+  signUpLoading: PropTypes.bool.isRequired,
   setSignUpError: PropTypes.func.isRequired,
   signUpWorker: PropTypes.func.isRequired,
   employees: PropTypes.array.isRequired,
@@ -812,7 +810,6 @@ const mapStateToProps = state => ({
   employees: state.UserReducers.userReducer.employees,
   userState: state.UserReducers.userReducer,
   currentLayout: state.LayoutReducers.layoutReducer.currentLayout,
-  isLoading: state.UserReducers.userReducer.loginLoading,
   signUpLoading: state.UserReducers.userReducer.signUpLoading,
   errorDescription: state.ErrorReducers.errorReducer.errorDescription,
   timesheetUploading: state.DashboardReducers.dashboardReducer.uploading
