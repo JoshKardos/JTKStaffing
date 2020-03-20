@@ -1,9 +1,11 @@
 import { ofType } from 'redux-observable'
-import { switchMap, mapTo, map, filter } from 'rxjs/operators';
+import { switchMap, mapTo, map, filter, flatMap } from 'rxjs/operators';
 import { TYPES as UserTypes } from '../Redux/UserRedux'
 import { TYPES as ErrorTypes } from '../Redux/ErrorRedux'
 import { TYPES as LayoutTypes, LAYOUTS } from '../Redux/LayoutRedux'
 import firebase from '../Firebase/index'
+import axios from 'axios'
+import { Observable } from 'rxjs';
 
 export const loginEpic = (action$) => action$.pipe(
   ofType(UserTypes.LOGIN),
@@ -24,9 +26,11 @@ export const signUpWorkerEpic = (action$, state$) => action$.pipe(
   ofType(UserTypes.SIGN_UP_WORKER),
   switchMap(action => {
     const { name, email, password } = action
-    return firebase.auth().createUserWithEmailAndPassword(email, password).then((value) => {
-      // success
-      const { uid } = value.user
+    return axios.post('/user/create', {
+      email: email,
+      password: password
+    }).then((result) => {
+      const { uid } = result.data
       const usersRef = firebase.database().ref(`/users/${uid}`)
       usersRef.set({
         name,
@@ -36,11 +40,12 @@ export const signUpWorkerEpic = (action$, state$) => action$.pipe(
       })
       const userAdminRef = firebase.database().ref(`/admin-workers/${state$.value.UserReducers.userReducer.id}/${uid}`)
       userAdminRef.set(1)
-      return window.location.reload() // new user will be logged in
+      return { type: UserTypes.FETCH_USER_DATA, payload: state$.value.UserReducers.userReducer.id }
     }).catch((error) => {
-      // error
-      const errorMessage = error.message
-      return { type: ErrorTypes.SET_ERROR, payload: errorMessage }
+      const { status } = error.response
+      const { message } = error.response.data
+      console.log(error.response)
+      return { type: ErrorTypes.SET_ERROR, payload: message }
     })
   })
 )
@@ -99,6 +104,7 @@ export const stopLoginLoadingEpic = (action$, state$) => action$.pipe(
 export const fetchUserDataEpic = (action$, state$) => action$.pipe(
   ofType(UserTypes.FETCH_USER_DATA),
   switchMap(action => {
+    console.log(action)
     const userId = action.payload
     let employees = []
     return firebase.database().ref(`/users/${userId}`).once('value').then((snapshot) => {

@@ -6,9 +6,37 @@ const path = require('path')
 const app = express()
 const ApiKeys = require('./ApiKeys')
 
+const admin = require('firebase-admin')
+const serviceAccount = require('./ServiceAccountKey.json')
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+})
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+
+app.post('/user/create', (req, res) => {
+  const { email, password } = req.body
+  admin.auth().createUser({
+    email: email,
+    password: password
+  }).then((userRecord) => {
+    res.status(200).send(userRecord).end()
+  })
+  .catch((error) => {
+    res.status(500).send(error).end()
+  })
+})
+
+app.post('/user/delete', (req, res) => {
+  const { userId } = req.body
+  admin.auth().deleteUser(userId).then(() => {
+    res.status(200).send()
+  })
+  .catch((error) => {
+    res.status(500).end()
+  })
+})
 
 app.post('/api/form', (req, res) => {
   const { adminEmail, senderName, downloadUrl } = req.body 

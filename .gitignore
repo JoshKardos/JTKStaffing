@@ -28,3 +28,4 @@ package-lock.json
 /client/src/Firebase
 
 ApiKeys.js
+ServiceAccountKey.json
