@@ -14,7 +14,8 @@ export const TYPES = {
   SET_SIGN_UP_ERROR: 'SET_SIGN_UP_ERROR',
   START_LOGIN_LOADING: 'START_LOGIN_LOADING',
   STOP_LOGIN_LOADING: 'STOP_LOGIN_LOADING',
-  SET_LOGIN_ERROR: 'SET_LOGIN_ERROR'
+  SET_LOGIN_ERROR: 'SET_LOGIN_ERROR',
+  EDIT_NAME: 'EDIT_NAME'
 }
 
 const initialState = {
@@ -45,6 +46,10 @@ const initialState = {
 
 export const logOut = () => (
   { type: TYPES.LOG_OUT, id: '', name: '', company: '', email: '', signUpLoading: false, loginLoading: false, admin: false, timesheets: [], employees: [], adminId: '' }
+)
+
+export const editName = (state = initialState) => (
+  { type: TYPES.EDIT_NAME, ...state }
 )
 
 export const login = (state = initialState) => (
@@ -107,7 +112,8 @@ const userReducer = createReducer(initialState, {
   SET_SIGN_UP_ERROR: setSignUpError,
   SET_LOGIN_ERROR: setLoginError,
   START_LOGIN_LOADING: startLoginLoading,
-  STOP_LOGIN_LOADING: stopLoginLoading
+  STOP_LOGIN_LOADING: stopLoginLoading,
+  EDIT_NAME: editName
 })
 
 export const reducers = combineReducers({

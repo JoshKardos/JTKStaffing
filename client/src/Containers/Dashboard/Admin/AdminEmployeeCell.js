@@ -46,7 +46,7 @@ class AdminEmployeeCell extends Component {
     })
   }
 
-  deleteConfirmPressed = (evt) => {
+  deleteConfirmPressed = () => {
     const { employee, setSignUpError, fetchUserData } = this.props
 
     this.setState({ deletingInProgress: true })
@@ -121,7 +121,7 @@ class AdminEmployeeCell extends Component {
       >
         <td>{employee.email}</td>
         <td style={Styles.AdminEmployeeCellFlex}>
-          {employee.name}
+          <p style={Styles.EmployeeNameText}>{employee.name}</p>
           { hover && <div style={Styles.AdminEmployeeCellButtons}>
             <button style={Styles.AdminEmployeeCellEditButton} onClick={() => this.setState({ deleting: false })}>
               <p>Cancel</p>
@@ -158,7 +158,7 @@ class AdminEmployeeCell extends Component {
       >
         <td>{employee.email}</td>
         <td style={Styles.AdminEmployeeCellFlex}>
-          {employee.name}
+        <p style={Styles.EmployeeNameText}>{employee.name}</p>
           { hover && <div style={Styles.AdminEmployeeCellButtons}>
             <button style={Styles.AdminEmployeeCellEditButton} onClick={() => this.setState({ editting: true })}>
               <p>Edit</p>

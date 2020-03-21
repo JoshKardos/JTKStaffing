@@ -11,7 +11,8 @@ import {
   fetchUserDataEpic,
   loginEpic,
   homePageAfterLoginOrSignUpEpic,
-  signUpWorkerEpic
+  signUpWorkerEpic,
+  editNameEpic
 } from './UserEpics'
 
 import {
@@ -42,6 +43,7 @@ export const rootEpic = combineEpics(
   stopSignUpLoadingEpic,
   homePageAfterLoginOrSignUpEpic,
   signUpWorkerEpic,
+  editNameEpic,
 
   // Error Epics
   resetErrorOnMenuBarSelectEpic,

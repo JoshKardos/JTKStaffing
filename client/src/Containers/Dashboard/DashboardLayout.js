@@ -18,7 +18,7 @@ import { validateEmail } from '../../helpers/UserHelpers'
 import edit from '../../Images/edit.png'
 import Tooltip, { TooltipItems } from '../../Components/Tooltip/Tooltip'
 import AdminEmployeeCell from './Admin/AdminEmployeeCell'
-import { signUpWorker, signUpAdmin, setSignUpError, fetchUserData, login, setLoginError, adminLoggedIn } from '../../Redux/UserRedux'
+import { signUpWorker, signUpAdmin, setSignUpError, fetchUserData, login, setLoginError, adminLoggedIn, editName } from '../../Redux/UserRedux'
 import { uploadTimesheet, setTimesheetFileError, timesheetUploadError, saveToDatabase, timesheetUploadStart } from '../../Redux/DashboardRedux'
 import { resetError } from '../../Redux/ErrorRedux'
 
@@ -428,15 +428,12 @@ class DashboardLayout extends Component {
       </div>
     )
   }
-  employeeCellClicked = (employee) => {
-    console.log("okY PRESSED")
-  }
 
   renderAdminEmployeesTableData() {
     const { employees, setSignUpError, fetchUserData } = this.props
     if (!employees) return null
     return employees.map((employee, index) => (
-      <AdminEmployeeCell employee={employee} index={index} onClick={this.employeeCellClicked} setSignUpError={setSignUpError} fetchUserData={fetchUserData} />
+      <AdminEmployeeCell employee={employee} index={index} setSignUpError={setSignUpError} fetchUserData={fetchUserData} />
     ))
   }
 
@@ -472,12 +469,10 @@ class DashboardLayout extends Component {
         <p style={Styles.timesheetHeader}>Employees</p>
         <div style={Styles.employeesTableContainer}>
           <table style={Styles.employeesTable}>
-            <thead>
-              <tr>
-                <th style={Styles.employeesTableCell}>Email address</th>
-                <th style={Styles.employeesTableCell}>Name</th>
-              </tr>
-            </thead>
+            <tr>
+              <th style={Styles.employeesTableCell}>Email address</th>
+              <th style={Styles.employeesTableCell}>Name</th>
+            </tr>
             <tbody>
               {this.renderAdminEmployeesTableData()}
             </tbody>
@@ -566,23 +561,15 @@ class DashboardLayout extends Component {
   }
 
   edittingNameSubmit = () => {
-    const { setSignUpError, fetchUserData } = this.props
+    const { setSignUpError, fetchUserData, editNameSubmit } = this.props
     const { newName } = this.state
     const { uid } = firebase.auth().currentUser
-    
-    firebase.database().ref(`/users/${uid}/name`).set(newName).then(() => {
-      const action = {
-        payload: uid
-      }
-      fetchUserData(action)
-      this.setState({ editting: null })
-    }).catch((error) => {
-      const action = {
-        payload: 'Error setting new name, try again'
-      }
-      setSignUpError(action)
-    })
-
+    const action = {
+      uid,
+      newName
+    }
+    editNameSubmit(uid, newName)
+    this.setState({ editting: null })
   }
 
   edittingEmailSubmit = () => {
@@ -656,7 +643,6 @@ class DashboardLayout extends Component {
         }
         this.setState({ editting: null })
         setSignUpError(action)
-
       }).catch((error) => {
         // An error happened.
         console.log(error)
@@ -802,7 +788,8 @@ DashboardLayout.propTypes = {
   timesheetUploadError: PropTypes.func.isRequired,
   timesheetUploadStart: PropTypes.func.isRequired,
   timesheetUploading: PropTypes.bool.isRequired,
-  fetchUserData: PropTypes.func.isRequired
+  fetchUserData: PropTypes.func.isRequired,
+  editNameSubmit: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -827,7 +814,8 @@ const mapDispatchToProps = dispatch => ({
   uploadTimesheet: (file) => dispatch(uploadTimesheet(file)),
   saveToDatabase: (timesheetTimePeriod, filepath, id, userId, timestamp) => dispatch(saveToDatabase(timesheetTimePeriod, filepath, id, userId, timestamp)),
   timesheetUploadError: () => dispatch(timesheetUploadError()),
-  timesheetUploadStart: () => dispatch(timesheetUploadStart())
+  timesheetUploadStart: () => dispatch(timesheetUploadStart()),
+  editNameSubmit: (userId, newName) => dispatch(editName(userId, newName))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardLayout)

@@ -104,7 +104,6 @@ export const stopLoginLoadingEpic = (action$, state$) => action$.pipe(
 export const fetchUserDataEpic = (action$, state$) => action$.pipe(
   ofType(UserTypes.FETCH_USER_DATA),
   switchMap(action => {
-    console.log(action)
     const userId = action.payload
     let employees = []
     return firebase.database().ref(`/users/${userId}`).once('value').then((snapshot) => {
@@ -150,6 +149,22 @@ export const fetchUserDataEpic = (action$, state$) => action$.pipe(
       }
     })
   })
+)
+
+export const editNameEpic = action$ => action$.pipe(
+  ofType(UserTypes.EDIT_NAME),
+  map(action => { 
+    const { uid, newName } = action
+    if (!newName) return { type: ErrorTypes.SET_ERROR, payload: 'Must not be an empty name' }
+    return firebase.database().ref(`/users/${uid}/name`).set(newName)
+      .then(() => {
+        return { type: UserTypes.FETCH_USER_DATA, payload: uid }
+      }).catch((error) => {
+        const errorMessage = 'Error setting new name, try again'
+        return { type: ErrorTypes.SET_ERROR, payload: errorMessage }
+      })
+    }
+  )
 )
 
 export const homePageAfterLoginOrSignUpEpic = (action$, state$) => action$.pipe(
