@@ -264,16 +264,23 @@ export default {
   },
   employeesTableContainer: {
     marginTop: '90px',
-    width: '80%',
+    width: '100%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center'
   },
+  EmployeeNameText: {
+    marginRight: '24px',
+    textOverflow: 'ellipsis',
+    wordWrap: 'break-word',
+    overflow: 'hidden',
+    maxHeight: '40px',
+    lineHeight: '20px'
+  },
   employeesTable: {
     width: '100%',
     border: CommonBorder,
-    textAlign: 'left',
-    marginLeft: '24px',
+    textAlign: 'left'
   },
   heightForty: {
     height: '40px'
@@ -290,10 +297,11 @@ export default {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    minWidth: '200px'
   },
   AdminEmployeeCellButtons: {
-    width: '130px',
+    minWidth: '130px',
     justifyContent: 'space-between',
     display: 'flex',
     flexDirection: 'row'
@@ -328,6 +336,7 @@ export default {
     display: 'block',
     margin: '0 auto',
     marginLeft: '12px',
+    marginRight: '12px',
     width: '100%',
     paddingBottom: '32px'
   },

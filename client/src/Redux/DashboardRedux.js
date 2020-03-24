@@ -8,14 +8,33 @@ export const TYPES = {
   SET_TIMESHEET_FILE_ERROR: 'SET_TIMESHEET_FILE_ERROR',
   UPLOAD_TIMESHEET: 'UPLOAD_TIMESHEET',
   TIMESHEET_UPLOAD_START: 'TIMESHEET_UPLOAD_START',
-  TIMESHEET_UPLOAD_STOP: 'TIMESHEET_UPLOAD_STOP'
-
+  TIMESHEET_UPLOAD_STOP: 'TIMESHEET_UPLOAD_STOP',
+  EDITTING_SETTINGS_START: 'EDITTING_SETTINGS_START',
+  SET_EDITTING_SETTINGS: 'SET_EDITTING_SETTINGS',
+  EDITTING_SETTINGS_STOP: 'EDITTING_SETTINGS_STOP'
 }
 
 const initialState = {
   uploadError: '',
-  uploading: false
+  uploading: false,
+
+  // SETTINGS
+  edittingSettings: ''
 }
+
+export const startEdittingSettings = (state = initialState) => (
+  { type: TYPES.EDITTING_SETTINGS_START, ...state }
+)
+
+export const setEdittingSettings = (state = initialState, action) => {
+  console.log(action)
+  return { type: TYPES.SET_EDITTING_SETTINGS, ...state, edittingSettings: action.payload }
+
+}
+
+export const stopEdittingSettings = (state = initialState) => (
+  { type: TYPES.EDITTING_SETTINGS_STOP, ...state }
+)
 
 export const saveToDatabase = (state = initialState) => (
   { type: TYPES.SAVE_TO_DATABASE, ...state }
@@ -52,7 +71,10 @@ const dashboardReducer = createReducer(initialState, {
   TIMESHEET_UPLOAD_START: timesheetUploadStart,
   TIMESHEET_UPLOAD_STOP: timesheetUploadStop,
   UPLOAD_TIMESHEET: uploadTimesheet,
-  SET_TIMESHEET_FILE_ERROR: setTimesheetFileError
+  SET_TIMESHEET_FILE_ERROR: setTimesheetFileError,
+  EDITTING_SETTINGS_START: startEdittingSettings,
+  EDITTING_SETTINGS_STOP: stopEdittingSettings,
+  SET_EDITTING_SETTINGS: setEdittingSettings
 })
 
 export const reducers = combineReducers({

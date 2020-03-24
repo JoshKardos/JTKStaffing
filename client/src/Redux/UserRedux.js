@@ -14,7 +14,10 @@ export const TYPES = {
   SET_SIGN_UP_ERROR: 'SET_SIGN_UP_ERROR',
   START_LOGIN_LOADING: 'START_LOGIN_LOADING',
   STOP_LOGIN_LOADING: 'STOP_LOGIN_LOADING',
-  SET_LOGIN_ERROR: 'SET_LOGIN_ERROR'
+  SET_LOGIN_ERROR: 'SET_LOGIN_ERROR',
+  EDIT_NAME: 'EDIT_NAME',
+  EDIT_EMAIL: 'EDIT_EMAIL',
+  EDIT_PASSWORD: 'EDIT_PASSWORD'
 }
 
 const initialState = {
@@ -43,8 +46,20 @@ const initialState = {
   */
 }
 
+export const editPassword = (state = initialState) => (
+  { type: TYPES.EDIT_PASSWORD, ...state}
+)
+
+export const editEmail = (state = initialState) => (
+  { type: TYPES.EDIT_EMAIL, ...state }
+)
+
 export const logOut = () => (
   { type: TYPES.LOG_OUT, id: '', name: '', company: '', email: '', signUpLoading: false, loginLoading: false, admin: false, timesheets: [], employees: [], adminId: '' }
+)
+
+export const editName = (state = initialState) => (
+  { type: TYPES.EDIT_NAME, ...state }
 )
 
 export const login = (state = initialState) => (
@@ -107,7 +122,10 @@ const userReducer = createReducer(initialState, {
   SET_SIGN_UP_ERROR: setSignUpError,
   SET_LOGIN_ERROR: setLoginError,
   START_LOGIN_LOADING: startLoginLoading,
-  STOP_LOGIN_LOADING: stopLoginLoading
+  STOP_LOGIN_LOADING: stopLoginLoading,
+  EDIT_NAME: editName,
+  EDIT_EMAIL: editEmail,
+  EDIT_PASSWORD: editPassword
 })
 
 export const reducers = combineReducers({

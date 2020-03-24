@@ -11,7 +11,12 @@ import {
   fetchUserDataEpic,
   loginEpic,
   homePageAfterLoginOrSignUpEpic,
-  signUpWorkerEpic
+  signUpWorkerEpic,
+  editNameEpic,
+  editEmailEpic,
+  editSuccessEpic,
+  editPasswordEpic,
+  editPasswordSuccessEpic
 } from './UserEpics'
 
 import {
@@ -24,7 +29,8 @@ import {
   uploadErrorEpic,
   uploadCompleteEpic,
   setTimesheetFileError,
-  sendEmailEpic
+  sendEmailEpic,
+  setEdittingSettingsEpic
 } from './DashboardEpics'
 
 // eslint-disable-next-line import/prefer-default-export
@@ -42,7 +48,11 @@ export const rootEpic = combineEpics(
   stopSignUpLoadingEpic,
   homePageAfterLoginOrSignUpEpic,
   signUpWorkerEpic,
-
+  editNameEpic,
+  editEmailEpic,
+  editSuccessEpic,
+  editPasswordEpic,
+  editPasswordSuccessEpic,
   // Error Epics
   resetErrorOnMenuBarSelectEpic,
 
@@ -52,5 +62,6 @@ export const rootEpic = combineEpics(
   uploadErrorEpic,
   uploadCompleteEpic,
   setTimesheetFileError,
-  sendEmailEpic
+  sendEmailEpic,
+  setEdittingSettingsEpic
 );
