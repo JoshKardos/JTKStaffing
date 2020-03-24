@@ -10,6 +10,14 @@ export const uploadErrorEpic = (action$) => action$.pipe(
   mapTo({ type: ErrorTypes.SET_ERROR, payload: 'Error saving to our records, try again...' })
 )
 
+export const setEdittingSettingsEpic = (action$) => action$.pipe(
+  ofType(DashboardTypes.EDITTING_SETTINGS_START, DashboardTypes.EDITTING_SETTINGS_STOP),
+  map(action => {
+    const header = action.payload
+    return { type: DashboardTypes.SET_EDITTING_SETTINGS, payload: header }
+  })
+)
+
 export const saveToDatabase = (action$) => action$.pipe(
   ofType(DashboardTypes.SAVE_TO_DATABASE),
   map(action => {

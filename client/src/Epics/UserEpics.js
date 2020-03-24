@@ -3,9 +3,11 @@ import { switchMap, mapTo, map, filter, flatMap } from 'rxjs/operators';
 import { TYPES as UserTypes } from '../Redux/UserRedux'
 import { TYPES as ErrorTypes } from '../Redux/ErrorRedux'
 import { TYPES as LayoutTypes, LAYOUTS } from '../Redux/LayoutRedux'
+import { TYPES as DashboardTypes } from '../Redux/DashboardRedux'
+
 import firebase from '../Firebase/index'
 import axios from 'axios'
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 export const loginEpic = (action$) => action$.pipe(
   ofType(UserTypes.LOGIN),
@@ -18,6 +20,90 @@ export const loginEpic = (action$) => action$.pipe(
       // error
       const errorMessage = error.message
       return { type: ErrorTypes.SET_ERROR, payload: errorMessage }
+    })
+  })
+)
+
+export const editNameEpic = action$ => action$.pipe(
+  ofType(UserTypes.EDIT_NAME),
+  switchMap(action => { 
+    console.log(action)
+    const { uid, newName } = action
+    if (!newName) return { type: ErrorTypes.SET_ERROR, payload: 'Must not be an empty name' }
+    return firebase.database().ref(`/users/${uid}/name`).set(newName)
+      .then(() => {
+        const payload = {
+          name: newName
+        }
+        return { type: DashboardTypes.EDITTING_SETTINGS_STOP, payload: payload }
+      }).catch((error) => {
+        const errorMessage = 'Error setting new name, try again'
+        return { type: ErrorTypes.SET_ERROR, payload: errorMessage }
+      })
+    }
+  )
+)
+
+export const editSuccessEpic = (action$) => action$.pipe(
+  ofType(DashboardTypes.EDITTING_SETTINGS_STOP),
+  map(action => {
+    console.log(action)
+    return { type: UserTypes.SET_USER_DATA, payload: action.payload }
+  })
+)
+
+export const editPasswordSuccessEpic = (action$, state$) => action$.pipe(
+  ofType(ErrorTypes.SET_ERROR),
+  filter(action => action.payload === "Successfully changed your password" ),
+  map(action => {
+    return { type: DashboardTypes.EDITTING_SETTINGS_STOP }
+  })
+)
+
+export const editPasswordEpic = (action$, state$) => action$.pipe(
+  ofType(UserTypes.EDIT_PASSWORD),
+  switchMap(action => {
+    console.log(action)
+    const { user, credential, newPassword } = action
+    return user.reauthenticateWithCredential(credential).then(() => {
+      return user.updatePassword(newPassword).then(() => {
+        return { type: ErrorTypes.SET_ERROR, payload: "Successfully changed your password" }
+      }).catch((error) => {
+        return { type: ErrorTypes.SET_ERROR, payload: error.message }
+      })
+    }).catch((error) => {
+      return { type: ErrorTypes.SET_ERROR, payload: error.message }
+    })
+  })
+)
+
+export const editEmailEpic = (action$, state$) => action$.pipe(
+  ofType(UserTypes.EDIT_EMAIL),
+  switchMap(action => {
+    const { user, credential, newEmail } = action
+    const { uid } = user
+    return user.reauthenticateWithCredential(credential).then(() => {
+      return user.updateEmail(newEmail).then(() => {
+        return firebase.database().ref(`/users/${uid}/email`).set(newEmail).then(() => {
+          console.log('success')
+          const payload = {
+            email: newEmail
+          }
+          return { type: DashboardTypes.EDITTING_SETTINGS_STOP, payload: payload }
+        }).catch((error) => {
+          console.log(error)
+          return { type: ErrorTypes.SET_ERROR, payload: error.message}
+        })
+      }).catch((error) => {
+        // An error happened.
+        console.log(error)
+        return { type: ErrorTypes.SET_ERROR, payload: error.message}
+
+      })
+    }).catch((error) => {
+      // An error happened.
+      console.log(error)
+      return { type: ErrorTypes.SET_ERROR, payload: error.message}
     })
   })
 )
@@ -149,22 +235,6 @@ export const fetchUserDataEpic = (action$, state$) => action$.pipe(
       }
     })
   })
-)
-
-export const editNameEpic = action$ => action$.pipe(
-  ofType(UserTypes.EDIT_NAME),
-  map(action => { 
-    const { uid, newName } = action
-    if (!newName) return { type: ErrorTypes.SET_ERROR, payload: 'Must not be an empty name' }
-    return firebase.database().ref(`/users/${uid}/name`).set(newName)
-      .then(() => {
-        return { type: UserTypes.FETCH_USER_DATA, payload: uid }
-      }).catch((error) => {
-        const errorMessage = 'Error setting new name, try again'
-        return { type: ErrorTypes.SET_ERROR, payload: errorMessage }
-      })
-    }
-  )
 )
 
 export const homePageAfterLoginOrSignUpEpic = (action$, state$) => action$.pipe(

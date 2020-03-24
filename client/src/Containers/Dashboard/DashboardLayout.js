@@ -18,8 +18,8 @@ import { validateEmail } from '../../helpers/UserHelpers'
 import edit from '../../Images/edit.png'
 import Tooltip, { TooltipItems } from '../../Components/Tooltip/Tooltip'
 import AdminEmployeeCell from './Admin/AdminEmployeeCell'
-import { signUpWorker, signUpAdmin, setSignUpError, fetchUserData, login, setLoginError, adminLoggedIn, editName } from '../../Redux/UserRedux'
-import { uploadTimesheet, setTimesheetFileError, timesheetUploadError, saveToDatabase, timesheetUploadStart } from '../../Redux/DashboardRedux'
+import { signUpWorker, signUpAdmin, setSignUpError, fetchUserData, login, setLoginError, adminLoggedIn, editName, editEmail, editPassword } from '../../Redux/UserRedux'
+import { uploadTimesheet, setTimesheetFileError, timesheetUploadError, saveToDatabase, timesheetUploadStart, startEdittingSettings } from '../../Redux/DashboardRedux'
 import { resetError } from '../../Redux/ErrorRedux'
 
 const AdminLayouts = {
@@ -67,7 +67,6 @@ class DashboardLayout extends Component {
       employeeIdSubmissionTimePeriodsMap: {}, // { 12345678 : 'September 2, 2019 - September 8, 2019', 987654321 : 'September 2, 2019 - September 8, 2019' }
     
       // settings
-      editting: null,
       newSettingEmail: '',
       newEmailPassword: '',
       oldPassword: '',
@@ -526,7 +525,7 @@ class DashboardLayout extends Component {
     return (
       <div style={Styles.EmailContainer} key={key}>
         <p>Name</p>
-        <div style={Styles.SettingsPassword}>
+        <div style={Styles.SettingsName}>
           <input placeholder='New name' onChange={(evt) => this.setState({ newName: evt.target.value }) } />
         </div>
         <div style={Styles.EditButtonContainer}>
@@ -537,10 +536,10 @@ class DashboardLayout extends Component {
   }
 
   renderAdminSetting(header, label, style) {
-    const { editting } = this.state
+    const { edittingSettings } = this.props
     return (
       <div>
-        { !(editting === header) && 
+        { !(edittingSettings === header) && 
           <div style={Styles.EmailContainer}>
             <p>{header}</p>
             <p style={style}>
@@ -548,16 +547,25 @@ class DashboardLayout extends Component {
             </p>
             <div style={Styles.EditButtonContainer}>
             <img src={edit} style={Styles.EmailEditButton} alt="edit" 
-              onClick={() => this.setState({ editting: header, newSettingEmail: '', newEmailPassword: '', oldPassword: '', newPassword: '' }) } />
+              onClick={() => this.editStartPressed(header)} />
             </div>
           </div>
         }
-        { editting === header && header === UserSetting.EMAIL && this.renderEmailEditting(header) }
-        { editting === header && header === UserSetting.PASSWORD && this.renderPasswordEditting(header) }
-        { editting === header && header === UserSetting.NAME && this.renderNameEditting(header) }
+        { edittingSettings === header && header === UserSetting.EMAIL && this.renderEmailEditting(header) }
+        { edittingSettings === header && header === UserSetting.PASSWORD && this.renderPasswordEditting(header) }
+        { edittingSettings === header && header === UserSetting.NAME && this.renderNameEditting(header) }
 
       </div>
     )
+  }
+
+  editStartPressed = (header) => {
+    const { startEdittingSettings } = this.props
+    const action = {
+      payload: header
+    }
+    startEdittingSettings(action)
+    return this.setState({ newSettingEmail: '', newEmailPassword: '', oldPassword: '', newPassword: '' }) 
   }
 
   edittingNameSubmit = () => {
@@ -568,18 +576,13 @@ class DashboardLayout extends Component {
       uid,
       newName
     }
-    editNameSubmit(uid, newName)
-    this.setState({ editting: null })
+    return editNameSubmit(action)
   }
 
   edittingEmailSubmit = () => {
-    const { fetchUserData, setSignUpError } = this.props
+    const { fetchUserData, setSignUpError, editEmail } = this.props
     const { newEmailPassword, newSettingEmail } = this.state
     const user = firebase.auth().currentUser
-    const credential = firebase.auth.EmailAuthProvider.credential(
-      user.email,
-      newEmailPassword
-    )
     if (!validateEmail(newSettingEmail)) {
       const action = {
         payload: 'Invalid email'
@@ -592,74 +595,33 @@ class DashboardLayout extends Component {
       }
       return setSignUpError(action)
     }
-    user.reauthenticateWithCredential(credential).then(() => {
-      user.updateEmail(newSettingEmail).then(() => {
-        firebase.database().ref(`/users/${user.uid}/email`).set(newSettingEmail).then(() => {
-          // Update successful.
-          const action = {
-            payload: user.uid
-          }
-          fetchUserData(action)
-          this.setState({ editting: null })
-        }).catch((error) => {
-          console.log(error)
-          const action = {
-            payload: error.message
-          }
-          setSignUpError(action)
-        })
-      }).catch((error) => {
-        // An error happened.
-        console.log(error)
-        const action = {
-          payload: error.message
-        }
-        setSignUpError(action)
-
-      })
-    }).catch((error) => {
-      // An error happened.
-      console.log(error)
-      const action = {
-        payload: error.message
-      }
-      setSignUpError(action)
-    })
+    const credential = firebase.auth.EmailAuthProvider.credential(
+      user.email,
+      newEmailPassword
+    )
+    const action = {
+      user: user,
+      credential: credential,
+      newEmail: newSettingEmail
+    }
+    return editEmail(action)
   }
 
   edittingPasswordSubmit = () => {
-    const { setSignUpError } = this.props
+    const { setSignUpError, editPassword } = this.props
     const { oldPassword, newPassword } = this.state
     const user = firebase.auth().currentUser
     const credential = firebase.auth.EmailAuthProvider.credential(
       user.email,
       oldPassword
     )
-    user.reauthenticateWithCredential(credential).then(() => {
-      user.updatePassword(newPassword).then(() => {
-        // Update successful.
-        const action = {
-          payload: "Successfully changed your password"
-        }
-        this.setState({ editting: null })
-        setSignUpError(action)
-      }).catch((error) => {
-        // An error happened.
-        console.log(error)
-        const action = {
-          payload: error.message
-        }
-        setSignUpError(action)
-
-      })
-    }).catch((error) => {
-      // An error happened.
-      console.log(error)
-      const action = {
-        payload: error.message
-      }
-      setSignUpError(action)
-    })
+    const action = {
+      user: user,
+      credential: credential,
+      newPassword: newPassword
+    }
+    
+    return editPassword(action)
   }
 
   renderAdminSettingsLayout() {
@@ -789,7 +751,9 @@ DashboardLayout.propTypes = {
   timesheetUploadStart: PropTypes.func.isRequired,
   timesheetUploading: PropTypes.bool.isRequired,
   fetchUserData: PropTypes.func.isRequired,
-  editNameSubmit: PropTypes.func.isRequired
+  editNameSubmit: PropTypes.func.isRequired,
+  edittingSettings: PropTypes.object.isRequired,
+  startEdittingSettings: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -799,7 +763,8 @@ const mapStateToProps = state => ({
   currentLayout: state.LayoutReducers.layoutReducer.currentLayout,
   signUpLoading: state.UserReducers.userReducer.signUpLoading,
   errorDescription: state.ErrorReducers.errorReducer.errorDescription,
-  timesheetUploading: state.DashboardReducers.dashboardReducer.uploading
+  timesheetUploading: state.DashboardReducers.dashboardReducer.uploading,
+  edittingSettings: state.DashboardReducers.dashboardReducer.edittingSettings
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -815,7 +780,10 @@ const mapDispatchToProps = dispatch => ({
   saveToDatabase: (timesheetTimePeriod, filepath, id, userId, timestamp) => dispatch(saveToDatabase(timesheetTimePeriod, filepath, id, userId, timestamp)),
   timesheetUploadError: () => dispatch(timesheetUploadError()),
   timesheetUploadStart: () => dispatch(timesheetUploadStart()),
-  editNameSubmit: (userId, newName) => dispatch(editName(userId, newName))
+  editNameSubmit: (userId, newName) => dispatch(editName(userId, newName)),
+  startEdittingSettings: (header) => dispatch(startEdittingSettings(header)),
+  editEmail: (user, credential, newEmail) => dispatch(editEmail(user, credential, newEmail)),
+  editPassword: (user, credential, newPassword) => dispatch(editPassword(user, credential, newPassword)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardLayout)
